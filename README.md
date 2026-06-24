@@ -1,32 +1,34 @@
-# MIT 6.1810 编程指北
+# MIT 6.1810 Operating System Engineering — Lab Notes
 
-## 课程介绍
+[English](./README.md) · [中文](./README_zh.md)
 
-MIT 6.1810 Operating System Engineering 是麻省理工学院计算机科学系的操作系统课程，其前身为广为人知的 MIT 6.828。课程以 RISC-V 架构和教学操作系统 xv6 为基础，系统讲解现代操作系统的核心机制与设计思想。
+## Course Overview
 
-课程内容涵盖系统调用、进程管理、虚拟内存、异常与中断、文件系统、并发控制、网络驱动等主题，重点理解操作系统如何实现抽象、隔离与资源管理，并为上层应用程序提供运行环境。
+MIT 6.1810 Operating System Engineering is an operating systems course offered by MIT's Department of Electrical Engineering and Computer Science, formerly known as MIT 6.828. Built on the RISC-V architecture and the xv6 teaching operating system, the course systematically covers the core mechanisms and design principles of modern operating systems.
 
-课程的核心部分是 Lab 实验。每个实验都会围绕 xv6 的某个子系统展开，通过实现新功能或改进现有机制，加深对操作系统原理的理解。
+Topics include system calls, process management, virtual memory, traps and interrupts, file systems, concurrency, and network drivers, with an emphasis on understanding how an OS provides abstraction, isolation, and resource management for user-space programs.
+
+The heart of the course is its Lab assignments. Each lab targets a specific xv6 subsystem, deepening understanding of OS principles by implementing new features or improving existing mechanisms.
 
 > [!IMPORTANT]
-> 本文所有内容均基于 **MIT 6.1810 Operating System Engineering (Fall 2025)** 课程及其对应的 **xv6-labs-2025** 实验仓库编写。
+> All content in this repository is based on **MIT 6.1810 Operating System Engineering (Fall 2025)** and its corresponding **xv6-labs-2025** lab repository.
 >
-> MIT 6.1810 的 Lab 内容会随着学期更新而发生变化，不同年份的实验要求、测试脚本甚至题目设计均可能存在差异。因此，本文中的代码实现、源码分析与实验说明仅保证适用于 **Fall 2025** 版本。
+> Lab content is updated each semester. Requirements, test scripts, and problem designs may differ across years. All code, source analysis, and lab write-ups here are written for the **Fall 2025** version only.
 
 ---
 
-## 课程资源
+## Course Resources
 
-* 课程主页：https://pdos.csail.mit.edu/6.1810/2025/index.html
-* xv6 主页：https://pdos.csail.mit.edu/6.1810/2025/xv6.html
-* xv6 Book：https://pdos.csail.mit.edu/6.1810/2025/xv6/book-riscv-rev5.pdf
-* xv6 Source Booklet：https://pdos.csail.mit.edu/6.1810/2025/xv6/xv6-src-booklet-rev5.pdf
+* Course Homepage: https://pdos.csail.mit.edu/6.1810/2025/index.html
+* xv6 Homepage: https://pdos.csail.mit.edu/6.1810/2025/xv6.html
+* xv6 Book: https://pdos.csail.mit.edu/6.1810/2025/xv6/book-riscv-rev5.pdf
+* xv6 Source Booklet: https://pdos.csail.mit.edu/6.1810/2025/xv6/xv6-src-booklet-rev5.pdf
 
 ---
 
-## 项目结构
+## Repository Structure
 
-所有 Lab 基于同一个代码仓库，每个实验对应一个独立分支：
+All labs share a single repository, with each lab on its own branch:
 
 ```text
 yzhe819/MIT-6.1810/
@@ -44,32 +46,30 @@ yzhe819/MIT-6.1810/
 
 ---
 
-## Lab 指引
+## Lab Guide
 
-官方难度参考：
+Official difficulty reference:
 
-* **easy**：小于 1 小时，通常是为后续练习热身
-* **moderate**：1～2 小时
-* **hard**：大于 2 小时，代码量不多，但细节极难写对
+* **easy**: under 1 hour, typically a warm-up for subsequent exercises
+* **moderate**: 1–2 hours
+* **hard**: over 2 hours — not much code, but the details are notoriously difficult to get right
 
-## Lab 0 — Tools｜搭建实验环境
+## Lab 0 — Tools｜Environment Setup
 
-**目标简述：** 配好实验环境和代码仓库。Lab 仓库与 xv6 官方仓库基本一致，但额外提供了测试与评分代码，用于自动验证实验结果。
+**Overview:** Set up the development environment and lab repository. The lab repo closely mirrors the official xv6 repository, with additional test and grading scripts for automated verification.
 
-[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/tools.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/6.1810-tools-setup-guide/6.1810-tools-setup-guide_zh.md)
+[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/tools.html) · [Setup Guide](https://github.com/yzhe819/MIT-6.1810/blob/main/6.1810-tools-setup-guide/6.1810-tools-setup-guide.md)
 
-## Lab 1 — Unix Utilities｜Unix 实用工具（2h）
+## Lab 1 — Unix Utilities (2h)
 
-**目标简述：** 实现若干用户态程序及 Unix 实用工具，熟悉 xv6 的开发环境与系统调用的基本使用方式。
+**Overview:** Implement several user-space programs and Unix utilities to get familiar with the xv6 development workflow and basic system call usage.
 
-**实验难度：** `sleep` (easy) · `sixfive` (moderate) · `memdump` (easy) · `find` (moderate) · `exec` (moderate)
+**Difficulty:** `sleep` (easy) · `sixfive` (moderate) · `memdump` (easy) · `find` (moderate) · `exec` (moderate)
 
-[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/util.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab1-xv6-unix-utilities/lab1-xv6-unix-utilities-zh.md) · [中文题解](https://github.com/yzhe819/MIT-6.1810/blob/main/lab1-xv6-unix-utilities/lab1-xv6-unix-utilities-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/util)
-
+[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/util.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab1-xv6-unix-utilities/lab1-xv6-unix-utilities.md) · [Solution](https://github.com/yzhe819/MIT-6.1810/blob/main/lab1-xv6-unix-utilities/lab1-xv6-unix-utilities.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/util)
 
 ---
 
-
 > The xv6 operating system is developed and maintained by MIT PDOS Lab.
 >
-> This repository only contains personal notes and solutions for educational purposes.
+> This repository contains personal notes and solutions for educational purposes only.
