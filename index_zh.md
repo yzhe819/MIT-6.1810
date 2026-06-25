@@ -1,3 +1,7 @@
+# MIT 6.1810 编程指北
+
+[English](./index.md) · [中文](./index_zh.md)
+
 ### Lab 指引
 
 官方难度参考：

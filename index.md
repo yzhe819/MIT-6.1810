@@ -1,3 +1,7 @@
+# MIT 6.1810 Operating System Engineering — Lab Notes
+
+[English](./index.md) · [中文](./index_zh.md)
+
 ### Lab Guide
 
 Official difficulty reference:
