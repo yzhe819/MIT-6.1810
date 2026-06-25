@@ -19,3 +19,11 @@ Official difficulty reference:
 **Difficulty:** `sleep` (easy) · `sixfive` (moderate) · `memdump` (easy) · `find` (moderate) · `exec` (moderate)
 
 [Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/util.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab1-xv6-unix-utilities/lab1-xv6-unix-utilities.md) · [Solution](https://github.com/yzhe819/MIT-6.1810/blob/main/lab1-xv6-unix-utilities/lab1-xv6-unix-utilities.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/util)
+
+### Lab 2 — System Calls
+
+**Overview:** Understanding the system call mechanism and the transition between user mode and kernel mode.
+
+**Difficulty:** `using gdb` (easy) · `sandbox a command` (moderate) · `sandbox with allowed pathnames` (easy) · `attack xv6` (moderate)
+
+[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/syscall.html) · [Chinese Translation](https://github.com/yzhe819/MIT-6.1810/blob/main/lab2-xv6-system-calls/lab2-xv6-system-calls.md) · [Chinese Solution](https://github.com/yzhe819/MIT-6.1810/blob/main/lab2-xv6-system-calls/lab2-xv6-system-calls-solution.md) · [Repository](https://github.com/yzhe819/MIT-6.1810/tree/syscall)
