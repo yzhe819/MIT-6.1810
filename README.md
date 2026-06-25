@@ -47,7 +47,11 @@ yzhe819/MIT-6.1810/
 
 ---
 
-For a complete index of all labs, including official documentation, Chinese translations, and code repositories, see [Lab Index](./index.md).
+If you are new to this course, this is the best place to start. Everything related to the labs can be found here.
+
+A complete index of all labs, including official documentation and code repositories:
+
+### -> [Lab Index](./index.md)
 
 ---
 
