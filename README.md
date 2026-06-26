@@ -14,13 +14,13 @@ The heart of the course is its Lab assignments. Each lab targets a specific xv6 
 > Lab content is updated each semester. Requirements, test scripts, and problem designs may differ across years. All code, source analysis, and lab write-ups here are written for the **Fall 2025** version only.
 
 ---
+## Quick Start
 
-## Course Resources
+If you are new to this course, this is the best place to start. Everything related to the labs can be found here.
 
-* Course Homepage: https://pdos.csail.mit.edu/6.1810/2025/index.html
-* xv6 Homepage: https://pdos.csail.mit.edu/6.1810/2025/xv6.html
-* xv6 Book: https://pdos.csail.mit.edu/6.1810/2025/xv6/book-riscv-rev5.pdf
-* xv6 Source Booklet: https://pdos.csail.mit.edu/6.1810/2025/xv6/xv6-src-booklet-rev5.pdf
+A complete index of all labs, including official documentation and code repositories:
+
+### -> [Lab Directory](./index.md)
 
 ---
 
@@ -47,11 +47,12 @@ yzhe819/MIT-6.1810/
 
 ---
 
-If you are new to this course, this is the best place to start. Everything related to the labs can be found here.
+## Course Resources
 
-A complete index of all labs, including official documentation and code repositories:
-
-### -> [Lab Index](./index.md)
+* Course Homepage: https://pdos.csail.mit.edu/6.1810/2025/index.html
+* xv6 Homepage: https://pdos.csail.mit.edu/6.1810/2025/xv6.html
+* xv6 Book: https://pdos.csail.mit.edu/6.1810/2025/xv6/book-riscv-rev5.pdf
+* xv6 Source Booklet: https://pdos.csail.mit.edu/6.1810/2025/xv6/xv6-src-booklet-rev5.pdf
 
 ---
 
