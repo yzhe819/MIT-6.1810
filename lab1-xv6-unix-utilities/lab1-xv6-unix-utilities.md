@@ -2,7 +2,6 @@
 
 This lab will familiarize you with xv6 and its system calls.
 
----
 
 ## Boot Xv6 `(easy)`
 
@@ -89,7 +88,6 @@ These are the files that mkfs includes in the initial file system; most are prog
 > - xv6 has no `ps` command, but type `Ctrl-p` to have the kernel print information about each running process. If you try it now, you'll see two lines: one for `init`, and one for `sh`.
 > - To quit QEMU: press `Ctrl-a`, then `x`.
 
----
 
 ## Exercises
 
@@ -131,7 +129,6 @@ $ ./grade-lab-util sleep
 $ make GRADEFLAGS=sleep grade
 ```
 
----
 
 ### 2. `sixfive` `(moderate)`
 
@@ -155,7 +152,6 @@ $ sixfive sixfive.txt
 - You can test if a character matches any of the separators using `strchr` (see `user/ulib.c`).
 - Start and end of file are implicit separators.
 
----
 
 ### 3. `memdump` `(easy)`
 
@@ -168,7 +164,7 @@ Feel free to use C's `printf()` in your `memdump()`.
 **Format characters:**
 
 | Character | Meaning |
-|-----------|---------|
+--|
 | `i` | Next 4 bytes as a 32-bit integer (decimal) |
 | `p` | Next 8 bytes as a 64-bit integer (hex) |
 | `h` | Next 2 bytes as a 16-bit integer (decimal) |
@@ -219,7 +215,6 @@ $ echo deadc0de | memdump p
 64616564
 ```
 
----
 
 ### 4. `find` `(moderate)`
 
@@ -260,7 +255,6 @@ $ find . b
 $ make grade
 ```
 
----
 
 ### 5. `exec` `(moderate)`
 
@@ -304,7 +298,6 @@ $ $
 
 > The output has many `$` because the xv6 shell doesn't realize it is processing commands from a file instead of from the console, and prints a `$` for each command in the file.
 
----
 
 ## Submitting the Lab
 
@@ -344,7 +337,6 @@ Upload the generated `lab.zip` to the corresponding Gradescope assignment.
 - Commit any modified source code before running `make zipball`.
 - You can inspect the status of your submission and download the submitted code at Gradescope. The Gradescope lab grade is your final lab grade.
 
----
 
 ## Optional Challenge Exercises
 
@@ -357,6 +349,5 @@ Upload the generated `lab.zip` to the corresponding Gradescope assignment.
   - Keep a history of passed shell commands `(moderate)`
   - Or anything else you would like your shell to do. If you are very ambitious, you may have to modify the kernel to support the kernel features you need; xv6 doesn't support much.
 
----
 
 *Questions or comments regarding 6.1810? Send e-mail to the course staff at 61810-staff@lists.csail.mit.edu*
