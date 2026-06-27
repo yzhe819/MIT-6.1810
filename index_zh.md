@@ -10,6 +10,8 @@
 * **moderate**：1～2 小时
 * **hard**：大于 2 小时，代码量不多，但细节极难写对
 
+[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/guidance.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/6.1810-lab-guidance/6.1810-lab-guidance-zh.md)
+
 ### Lab 0 — Tools｜搭建实验环境
 
 **目标简述：** 配好实验环境和代码仓库。Lab 仓库与 xv6 官方仓库基本一致，但额外提供了测试与评分代码，用于自动验证实验结果。

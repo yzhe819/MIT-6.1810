@@ -10,6 +10,8 @@ Official difficulty reference:
 * **moderate**: 1–2 hours
 * **hard**: over 2 hours — not much code, but the details are notoriously difficult to get right
 
+[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/guidance.html) · [Full Description](https://github.com/yzhe819/MIT-6.1810/blob/main/6.1810-lab-guidance/6.1810-lab-guidance.md)
+
 ### Lab 0 — Tools｜Environment Setup
 
 **Overview:** Set up the development environment and lab repository. The lab repo closely mirrors the official xv6 repository, with additional test and grading scripts for automated verification.
