@@ -4,16 +4,31 @@
 
 ## Course Overview
 
-MIT 6.1810 Operating System Engineering is an operating systems course offered by MIT's Department of Electrical Engineering and Computer Science, formerly known as MIT 6.828. Built on the RISC-V architecture and the xv6 teaching operating system, the course systematically covers the core mechanisms and design principles of modern operating systems.
+MIT 6.1810 is an operating systems course offered by MIT's Department of Electrical Engineering and Computer Science, formerly known as MIT 6.828. Built on the RISC-V architecture and the xv6 teaching operating system, the course systematically covers the core mechanisms and design principles of modern operating systems.
 
 The heart of the course is its Lab assignments. Each lab targets a specific xv6 subsystem, deepening understanding of OS principles by implementing new features or improving existing mechanisms.
 
 > [!IMPORTANT]
 > All content in this repository is based on **MIT 6.1810 Operating System Engineering (Fall 2025)** and its corresponding **xv6-labs-2025** lab repository.
->
-> Lab content is updated each semester. Requirements, test scripts, and problem designs may differ across years. All code, source analysis, and lab write-ups here are written for the **Fall 2025** version only.
 
 ---
+
+## Why This Repo?
+
+Most reference materials for MIT's operating system courses (6.828 / 6.S081 / 6.1810) are based on versions from 2018–2022. Since then, the Labs have undergone significant changes, making many existing write-ups outdated or no longer applicable. 
+
+So I thought — why not write one myself?
+
+A few things that make this repo different:
+
+- **Up-to-date Labs** · Based on the Fall 2025 version of the course, aligned with the current lab assignments.
+- **Bilingual write-ups** · Notes maintained in both Chinese and English, hoping to make the content accessible to a wider audience.
+- **macOS setup** · All configuration and debugging done on macOS, making this especially useful for Mac users.
+- **Optional Challenges included** · Goes beyond the required exercises — all optional challenge problems are attempted as well.
+- **A returning perspective** · The author previously completed earlier versions of 6.828 and 6.S081, and revisits the new Labs years later to document what has changed and what hasn't.
+
+---
+
 ## Quick Start
 
 If you are new to this course, this is the best place to start. Everything related to the labs can be found here.
