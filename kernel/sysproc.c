@@ -105,3 +105,14 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+
+uint64
+sys_interpose(void)
+{
+  // ref to sys_pause, read the argument from user model
+  int n;
+  argint(0, &n);
+  printf("mask: %d\n", n);
+  return 0;
+}
