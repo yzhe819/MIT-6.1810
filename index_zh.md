@@ -26,7 +26,7 @@
 
 [官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/util.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab1-xv6-unix-utilities/lab1-xv6-unix-utilities-zh.md) · [中文题解](https://github.com/yzhe819/MIT-6.1810/blob/main/lab1-xv6-unix-utilities/lab1-xv6-unix-utilities-solution-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/util)
 
-### Lab 2 — System Calls｜系统调用
+### Lab 2 — System Calls｜系统调用 (8h)
 
 **目标简述：** 理解系统调用机制，以及用户态（User Mode）与内核态（Kernel Mode）之间的切换过程。
 

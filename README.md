@@ -21,9 +21,9 @@ So I thought — why not write one myself?
 
 A few things that make this repo different:
 
-- **Up-to-date Labs** · Based on the Fall 2025 version of the course, aligned with the current lab assignments.
+- **Up-to-date Labs (2025 Fall)** · Based on the Fall 2025 version of the course, aligned with the current lab assignments.
 - **Bilingual write-ups** · Notes maintained in both Chinese and English, hoping to make the content accessible to a wider audience.
-- **macOS setup** · All configuration and debugging done on macOS, making this especially useful for Mac users.
+- **Code and notes together** · Beyond just sharing working code, each write-up documents the reasoning, pitfalls, and debugging process — written to help readers actually understand, not just copy.
 - **Optional Challenges included** · Goes beyond the required exercises — all optional challenge problems are attempted as well.
 - **A returning perspective** · The author previously completed earlier versions of 6.828 and 6.S081, and revisits the new Labs years later to document what has changed and what hasn't.
 
@@ -49,7 +49,7 @@ yzhe819/MIT-6.1810/
 ├── main      Documentation & lab index
 │
 ├── util      Lab 1: Unix Utilities        ✓ 2026-06-25
-├── syscall   Lab 2: System Calls
+├── syscall   Lab 2: System Calls          ✓ 2026-06-29
 ├── pgtbl     Lab 3: Page Tables
 ├── traps     Lab 4: Traps
 ├── cow       Lab 5: Copy-on-Write Fork

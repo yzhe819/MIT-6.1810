@@ -19,9 +19,9 @@ MIT 6.1810 是麻省理工学院计算机科学系的操作系统课程，其前
 
 本仓库的几个特点：
 
-- **最新课程跟进** · 基于 Fall 2025 版本的 Lab，贴合最新课程实际内容。
+- **最新课程跟进 (2025 Fall)** · 基于 Fall 2025 版本的 Lab，贴合最新课程实际内容。
 - **双语写作** · 同步维护中文与英文两套笔记，希望降低中文学习者的阅读门槛。
-- **macOS 环境** · 所有配置与调试均在 macOS 下完成，对 Mac 用户更具参考价值。
+- **代码与笔记并重** · 不只提供实现代码，同时记录思路、踩坑与调试过程，力求让读者真正看懂而非只是抄答案。
 - **Optional Challenge 全覆盖** · 不止于必做题，尝试完成所有选做挑战，供有余力的读者参考。
 - **有经验的回归视角** · 作者曾完成过早期版本的 6.828 与 6.S081，时隔多年重新审视新版 Lab，记录哪些变了、哪些没变。
 
@@ -47,7 +47,7 @@ yzhe819/MIT-6.1810/
 ├── main      Documentation & lab index
 │
 ├── util      Lab 1: Unix Utilities        ✓ 2026-06-25
-├── syscall   Lab 2: System Calls
+├── syscall   Lab 2: System Calls          ✓ 2026-06-29
 ├── pgtbl     Lab 3: Page Tables
 ├── traps     Lab 4: Traps
 ├── cow       Lab 5: Copy-on-Write Fork

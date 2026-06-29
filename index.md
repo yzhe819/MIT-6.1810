@@ -26,7 +26,7 @@ Official difficulty reference:
 
 [Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/util.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab1-xv6-unix-utilities/lab1-xv6-unix-utilities.md) · [Solution](https://github.com/yzhe819/MIT-6.1810/blob/main/lab1-xv6-unix-utilities/lab1-xv6-unix-utilities-solution.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/util)
 
-### Lab 2 — System Calls
+### Lab 2 — System Calls (8h)
 
 **Overview:** Understanding the system call mechanism and the transition between user mode and kernel mode.
 

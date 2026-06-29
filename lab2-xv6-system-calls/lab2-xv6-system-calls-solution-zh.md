@@ -1,10 +1,10 @@
-## Lab 2 实验报告
+# Lab 2 实验报告
 
 **目标简述：** 理解系统调用（System Call）机制，以及用户态（User Mode）与内核态（Kernel Mode）之间的切换过程
 
-**实验难度：** `Using GDB` (Easy)
+**实验难度：** `Using GDB` (Easy) · `Sandbox a command` (moderate) · `Sandbox with allowed pathnames` (easy) · `Attack xv6` (moderate)
 
-### Using GDB (Easy)
+## Using GDB (Easy)
 
 首先，实验要求同时开启两个终端窗口，一个运行 `make qemu-gdb`，另一个运行 `gdb`，以验证 GDB 安装是否完整。本实验在 macOS 环境下进行，因此部分配置与课程标准环境略有不同，需要额外安装适配 RISC-V 架构的 GDB 版本。
 
@@ -49,7 +49,7 @@ Thread 2 hit Breakpoint 1, syscall () at kernel/syscall.c:243
 
 ---
 
-#### Q1: 查看调用栈输出，哪个函数调用了 syscall？
+### Q1: 查看调用栈输出，哪个函数调用了 syscall？
 
 观察 `backtrace` 的输出可以发现，位于 `kernel/trap.c` 第 68 行的 `usertrap()` 函数调用了 `syscall()`。查阅对应源码可以确认，这正是用户态 trap 处理流程中负责分发系统调用的入口。
 
@@ -63,7 +63,7 @@ Thread 2 hit Breakpoint 1, syscall () at kernel/syscall.c:243
 
 ---
 
-#### Q2: p->trapframe->a7 的值是多少？它代表什么含义？（提示：参考 user/init.c 和 user/init.asm）
+### Q2: p->trapframe->a7 的值是多少？它代表什么含义？（提示：参考 user/init.c 和 user/init.asm）
 
 使用命令 `p /x p->trapframe->a7` 可直接打印 `a7` 寄存器的值，结果为 `0xf`，即十进制的 15。
 
@@ -117,7 +117,7 @@ init 进程启动
 
 ---
 
-#### Q3: trap 发生之前，CPU 处于哪种特权模式？
+### Q3: trap 发生之前，CPU 处于哪种特权模式？
 
 查阅 RISC-V 特权指令手册第 4.1.1 节，原文说明如下：
 
@@ -189,7 +189,7 @@ syscall(void)
 
 ---
 
-#### Q4: 写出内核发生 panic 时对应的汇编指令。变量 num 对应哪个寄存器？
+### Q4: 写出内核发生 panic 时对应的汇编指令。变量 num 对应哪个寄存器？
 
 ![2026-06-25 22.11.29](./2026-06-25%2022.11.29.png)
 
@@ -213,7 +213,7 @@ syscall(void)
 
 ---
 
-#### Q5: 内核为何崩溃？提示：参考教材图 3-3，地址 0 是否在内核地址空间中有映射？scause 的值是否印证了这一点？
+### Q5: 内核为何崩溃？提示：参考教材图 3-3，地址 0 是否在内核地址空间中有映射？scause 的值是否印证了这一点？
 
 根据教材图 3-3，xv6 内核的地址空间布局如下：
 
@@ -247,7 +247,7 @@ syscall(void)
 
 ---
 
-#### Q6: 内核发生 panic 时，正在运行的是哪个进程？其进程 ID（pid）是多少？
+### Q6: 内核发生 panic 时，正在运行的是哪个进程？其进程 ID（pid）是多少？
 
 在 GDB 中执行以下命令，直接打印当前进程信息：
 
@@ -264,3 +264,245 @@ syscall(void)
 ![2026-06-25 22.28.27](./2026-06-25%2022.28.27.png)
 
 `init` 是 xv6 启动后创建的第一个用户进程，pid 固定为 1。panic 发生在该进程执行第一个系统调用（`open("console", O_RDWR)`）的过程中，与前述分析完全一致。
+
+## Sandbox a command (moderate)
+
+根据lab提示，首先在 `Makefile` 的 `UPROGS` 中添加 `$U/_sandbox`，在 `user/user.h` 中添加函数原型 `int interpose(int, char*);`，并在 `user/usys.pl` 中注册。这是用户态所需的全部改动。
+
+> The Makefile invokes the perl script user/usys.pl, which produces user/usys.S, the actual system call stubs, which use the RISC-V ecall instruction to transition to the kernel. 
+
+内核侧首先在 `kernel/syscall.h` 中分配新的 system call 编号 `#define SYS_interpose 22`，然后在 `kernel/syscall.c` 中添加函数声明并在 syscalls 数组中把system call number和实际的函数对应上。
+
+`sys_interpose()` 的实现在 `kernel/sysproc.c` 中。
+
+首先需要从用户的命令行输入里面拿到mask argument，翻找一下整个`kernel/sysproc.c`，发现了lab1的老朋友, pause方法在内核里面的实现。
+
+```c
+uint64
+sys_pause(void)
+{
+  int n;
+  uint ticks0;
+
+  argint(0, &n);
+  if(n < 0)
+    n = 0;
+  acquire(&tickslock);
+  ticks0 = ticks;
+  while(ticks - ticks0 < n){
+    if(killed(myproc())){
+      release(&tickslock);
+      return -1;
+    }
+    sleep(&ticks, &tickslock);
+  }
+  release(&tickslock);
+  return 0;
+}
+```
+
+参考同文件 `sys_pause()` 的写法，使用 `argint(0, &mask)` 读取第一个整数参数。实现就可以这样写了,并且把mask传参打印出来，检查确保它能拿到。
+```c
+uint64
+sys_interpose(void)
+{
+  // ref to sys_pause, read the argument from user model
+  int n;
+  argint(0, &n);
+  printf("mask: %d\n", n);
+  return 0;
+} No newline at end of file
+```
+
+> recording the mask argument in a new field in the proc structure (see kernel/proc.h).
+
+根据提示，直接去proc结构体里面加上一个`int mask;`,然后开始修改内核里面的fork实现。
+
+首先我们需要把用户的传参写到pro里面来持久化保存状态，通过myproc()来拿现在的proc，然后直接写入就好
+
+```c
+uint64
+sys_interpose(void)
+{
+  // ref to sys_pause, read the argument from user model
+  int mask;
+  argint(0, &mask);
+  printf("mask: %d\n", mask);
+  myproc()->mask = mask;
+  return 0;
+}
+```
+
+为使子进程继承父进程的限制，在 `kernel/proc.c` 的 `kfork()` 中添加一行 `np->mask = p->mask`，将 mask 复制给子进程。
+
+```c
+int
+kfork(void)
+{
+  int i, pid;
+  struct proc *np;
+  struct proc *p = myproc();
+
+  // Allocate process.
+  if((np = allocproc()) == 0){
+    return -1;
+  }
+
+  // Copy user memory from parent to child.
+  if(uvmcopy(p->pagetable, np->pagetable, p->sz) < 0){
+    freeproc(np);
+    release(&np->lock);
+    return -1;
+  }
+  np->sz = p->sz;
+
+  // also copy the mask argument from the parent process
+  np->mask = p->mask;
+
+  // copy saved user registers.
+  *(np->trapframe) = *(p->trapframe);
+
+  ···
+
+```
+
+最后在 `kernel/syscall.c` 的 `syscall()` 函数中实现拦截。如果当前proc需要访问的系统权限已经被mask设置拒绝，那就直接拒绝调用。
+
+由于每次进入 `syscall()` 只处理一个 syscall 编号，只需用位运算检查对应的 bit 是否被置位，是则直接返回 `-1`：
+
+```c
+void
+syscall(void)
+{
+  int num;
+  struct proc *p = myproc();
+
+  num = p->trapframe->a7;
+  if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
+    if ((p->mask >> num) & 1) {
+      p->trapframe->a0 = -1;
+      return;
+    }
+    p->trapframe->a0 = syscalls[num]();
+  } else {
+    printf("%d %s: unknown sys call %d\n",
+            p->pid, p->name, num);
+    p->trapframe->a0 = -1;
+  }
+}
+```
+
+---
+
+## Sandbox with allowed pathnames (easy)
+
+> `interpose` 的第二个参数是允许访问的路径。如果 `open` 或 `exec` 被 mask 屏蔽，但访问的路径与允许路径匹配，则放行该调用。
+
+这个任务读起来比较绕口，意思是添加第二个传参（允许访问的路径），如果路径名在允许访问的路径里，即使已经屏蔽了open或者exec这两个方法，操作系统需要依然让它进行这两种操作。
+
+在 `proc` 结构体中新增 `char path[MAXPATH]` 字段，在 `sys_interpose()` 中用 `argstr(1, path, MAXPATH)` 读取第二个参数，并以 `safestrcpy()` 写入 proc：
+
+```c
+uint64
+sys_interpose(void)
+{
+  // ref to sys_pause, read the argument from user model
+  int mask;
+  char path[MAXPATH];
+
+  argint(0, &mask);
+  argstr(1, path, MAXPATH);
+
+  // printf("mask: %d\n", mask);
+  // printf("path: %s\n", path);
+
+  myproc()->mask = mask;
+  safestrcpy(myproc()->path, path, sizeof(path));
+
+  return 0;
+}
+```
+
+fork 时同样需要继承 path，在 `kfork()` 中补上 `safestrcpy(np->path, p->path, sizeof(p->path))`。
+
+`open` 和 `exec` 被 mask 时，不能在 `syscall()` 层直接拒绝，因为此时还不知道路径参数是什么。需要让它们进入各自的处理函数后再做判断，因此在 `syscall()` 的拦截逻辑中为这两个 syscall 加上例外：
+
+```c
+if ((p->mask >> num) & 1) {
+  if (num != SYS_open && num != SYS_exec) {
+    p->trapframe->a0 = -1;
+    return;
+  }
+}
+```
+
+路径检查分别在 `kernel/sysfile.c` 的 `sys_open()` 和 `sys_exec()` 中完成。以 `sys_open()` 为例，在 `argstr()` 读取路径之后、`begin_op()` 之前插入：
+
+```c
+struct proc *p = myproc();
+if ((p->mask >> SYS_open) & 1) {
+  if (strncmp(path, p->path, MAXPATH) != 0) {
+    return -1;
+  }
+}
+```
+
+`sys_exec()` 中同理，将 `SYS_open` 替换为 `SYS_exec` 即可。
+
+```c
+struct proc *p = myproc();
+if ((p->mask >> SYS_exec) & 1) {
+  if (strncmp(path, p->path, MAXPATH) != 0) {
+    return -1;
+  }
+}
+```
+
+这个逻辑有点绕，做的时候需要想清楚再动手写。
+
+## Attack xv6 (moderate)
+
+lab问题里面描述，清除新分配页面的逻辑被去掉了，然后将垃圾数据放进空闲页面的逻辑也被省略了。
+这就导致了新分配的内存里面会残留老的数据，如果有敏感数据，那就能直接被恶意程序读到了。
+
+需要实现`user/attack.c`方法，把之前写入的敏感数据读出来。
+
+这里用了`strcpy(data, "This may help.");`来定位，感觉有点像网页爬虫里面用html .id和css classname来定位数据。
+
+因为"This may help." 是固定的标记字符串，敏感数据紧随其后偏移 16 字节。扫描申请到的内存，找到该标记后直接打印偏移 16 字节处的内容
+
+```c
+#include "kernel/types.h"
+#include "user/user.h"
+
+#define DATASIZE (8 * 4096)
+
+int 
+main(void) {
+  char *mem = sbrk(DATASIZE);
+  const char *hint = "This may help.";
+
+  for (int i = 0; i < DATASIZE - 16; i++) {
+    if (!strcmp(mem + i, hint)) {
+      printf("%s\n", mem + i + 16);
+      break;
+    }
+  }
+
+  exit(0);
+}
+```
+
+测试生成的秘密字符串保证只包含数字以及大小写字母。可以用手动判断是否完结。
+
+或者找到后可以直接print，因为%s会自动帮你把字符串截断。
+
+## Lab 2 整体测试
+
+完成所有练习后，执行以下命令对 Lab 2 进行完整测试，验证各功能实现的正确性：
+
+```sh
+./grade-lab-syscall
+```
+
+![2026-06-29 21.12.39](./2026-06-29%2021.12.39.png)
