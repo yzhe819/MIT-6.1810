@@ -477,4 +477,4 @@ After completing all exercises, run the following command to execute the full La
 ./grade-lab-util
 ```
 
-![截屏2026-06-27 21.03.29](./截屏2026-06-27%2021.03.29.png)
+![2026-06-27 21.03.29](./2026-06-27%2021.03.29.png)
