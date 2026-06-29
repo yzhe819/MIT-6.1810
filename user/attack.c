@@ -1,12 +1,19 @@
 #include "kernel/types.h"
-#include "kernel/fcntl.h"
 #include "user/user.h"
-#include "kernel/riscv.h"
 
-int
-main(int argc, char *argv[])
-{
-  // Your code here.
+#define DATASIZE (8 * 4096)
 
-  exit(1);
+int 
+main(void) {
+  char *mem = sbrk(DATASIZE);
+  const char *hint = "This may help.";
+
+  for (int i = 0; i < DATASIZE - 16; i++) {
+    if (!strcmp(mem + i, hint)) {
+      printf("%s\n", mem + i + 16);
+      break;
+    }
+  }
+
+  exit(0);
 }
