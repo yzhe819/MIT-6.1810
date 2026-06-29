@@ -1,5 +1,7 @@
 # Lab 1：Xv6 与 Unix 实用工具
 
+[English](./lab1-xv6-unix-utilities.md) · [中文](./lab1-xv6-unix-utilities-zh.md)
+
 本实验将带你熟悉 xv6 及其系统调用。
 
 

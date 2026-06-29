@@ -1,5 +1,7 @@
 # Lab 1 Report
 
+[English](./lab1-xv6-unix-utilities-solution.md) · [中文](./lab1-xv6-unix-utilities-solution-zh.md)
+
 **Overview:** Implement a set of user-space programs and Unix utilities to become familiar with the xv6 development environment and basic usage of system calls.
 
 **Difficulty:** `sleep` (easy) · `sixfive` (moderate) · `memdump` (easy) · `find` (moderate) · `exec` (moderate)

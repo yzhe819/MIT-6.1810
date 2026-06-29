@@ -1,5 +1,7 @@
 # Lab 1 实验报告
 
+[English](./lab1-xv6-unix-utilities-solution.md) · [中文](./lab1-xv6-unix-utilities-solution-zh.md)
+
 **目标简述：** 实现若干用户态程序及 Unix 实用工具，熟悉 xv6 的开发环境与系统调用的基本使用方式。
 
 **实验难度：** `sleep` (easy) · `sixfive` (moderate) · `memdump` (easy) · `find` (moderate) · `exec` (moderate)

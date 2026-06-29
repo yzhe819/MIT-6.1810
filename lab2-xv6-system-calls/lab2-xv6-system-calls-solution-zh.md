@@ -1,5 +1,7 @@
 # Lab 2 实验报告
 
+[English](./lab2-xv6-system-calls-solution.md) · [中文](./lab2-xv6-system-calls-solution-zh.md)
+
 **目标简述：** 理解系统调用（System Call）机制，以及用户态（User Mode）与内核态（Kernel Mode）之间的切换过程
 
 **实验难度：** `Using GDB` (Easy) · `Sandbox a command` (moderate) · `Sandbox with allowed pathnames` (easy) · `Attack xv6` (moderate)

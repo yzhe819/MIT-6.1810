@@ -1,5 +1,7 @@
 # Lab 1: Xv6 and Unix Utilities
 
+[English](./lab1-xv6-unix-utilities.md) · [中文](./lab1-xv6-unix-utilities-zh.md)
+
 This lab will familiarize you with xv6 and its system calls.
 
 

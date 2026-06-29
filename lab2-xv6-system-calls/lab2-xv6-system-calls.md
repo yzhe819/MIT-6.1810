@@ -1,5 +1,7 @@
 # Lab 2: System Calls
 
+[English](./lab2-xv6-system-calls.md) · [中文](./lab2-xv6-system-calls-zh.md)
+
 In the last lab you used system calls to write a few utilities. In this lab you will add a new system call to xv6, which will help you understand how they work and will expose you to some of the internals of the xv6 kernel. You will add more system calls in later labs.
 
 Before you start coding, read Chapter 2 of the xv6 book, and Sections 4.3 and 4.4 of Chapter 4, and related source files:

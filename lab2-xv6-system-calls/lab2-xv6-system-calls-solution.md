@@ -1,4 +1,6 @@
-# Lab 2 Write-up
+# Lab 2 Report
+
+[English](./lab2-xv6-system-calls-solution.md) · [中文](./lab2-xv6-system-calls-solution-zh.md)
 
 **Overview:** Understand the system call mechanism and the transition between user mode and kernel mode.
 
