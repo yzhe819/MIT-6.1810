@@ -8,7 +8,7 @@
 // get the last file name
 // ./a/b/hello.txt -> hello.txt
 char *
-basename(char *path)
+fmtname(char *path)
 {
   char *p = path + strlen(path);
   while (p >= path && *p != '/') p--;
@@ -46,7 +46,7 @@ find(char *path, char *target, char **exec_args, int exec_argc)
 
   switch(st.type){
   case T_FILE:
-    if (strcmp(basename(path), target) == 0)
+    if (strcmp(fmtname(path), target) == 0)
       exec_args ? invoke(exec_args, exec_argc, path) : printf("%s\n", path);
     break;
 
