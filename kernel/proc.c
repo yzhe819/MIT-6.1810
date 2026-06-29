@@ -275,6 +275,7 @@ kfork(void)
 
   // also copy the mask argument from the parent process
   np->mask = p->mask;
+  safestrcpy(np->path, p->path, sizeof(p->path));
 
   // copy saved user registers.
   *(np->trapframe) = *(p->trapframe);

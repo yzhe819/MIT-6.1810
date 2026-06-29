@@ -141,8 +141,11 @@ syscall(void)
     // each system call only check one premission
     // so just check that specific bit is enough
     if ((p->mask >> num) & 1) {
-      p->trapframe->a0 = -1;
-      return;
+      if (num != SYS_open && num != SYS_exec) {
+        // do nothing, continue the system call
+        p->trapframe->a0 = -1;
+        return;
+      }
     }
     // Use num to lookup the system call function for num, call it,
     // and store its return value in p->trapframe->a0

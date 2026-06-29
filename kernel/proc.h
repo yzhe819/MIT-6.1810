@@ -107,4 +107,5 @@ struct proc {
 
   // for sandbox command
   int mask;                    // Integer mask argument for premission
+  char path[MAXPATH];          // Store the open/exec path
 };

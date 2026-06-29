@@ -112,8 +112,16 @@ sys_interpose(void)
 {
   // ref to sys_pause, read the argument from user model
   int mask;
+  char path[MAXPATH];
+
   argint(0, &mask);
-  printf("mask: %d\n", mask);
+  argstr(1, path, MAXPATH);
+
+  // printf("mask: %d\n", mask);
+  // printf("path: %s\n", path);
+
   myproc()->mask = mask;
+  safestrcpy(myproc()->path, path, sizeof(path));
+
   return 0;
 }
