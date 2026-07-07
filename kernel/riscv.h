@@ -353,6 +353,7 @@ sfence_vma()
 }
 
 typedef uint64 pte_t;
+// here is page table data structure
 typedef uint64 *pagetable_t; // 512 PTEs
 
 #endif // __ASSEMBLER__

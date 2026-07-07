@@ -142,9 +142,39 @@ walkaddr(pagetable_t pagetable, uint64 va)
 
 
 #if defined(LAB_PGTBL) || defined(SOL_MMAP) || defined(SOL_COW)
+void 
+vmprint_helper(pagetable_t pagetable, int level, uint64 va) {
+  if (level == 3) {
+    return;
+  }
+
+  // there are 2^9 = 512 PTEs in a page table.
+  for(int i = 0; i < 512; i++){
+    uint64 child_va = va | ((uint64)i << PXSHIFT(2 - level));
+    pte_t pte = pagetable[i];
+    uint64 pa = PTE2PA(pte);
+
+    if((pte & PTE_V) == 0)
+      continue;
+
+    // print information
+    for(int i = 0; i < level; i++){
+      printf(" ..");
+    }
+
+    printf("%p: pte %p pa %p\n", (void*)child_va, (void*)pte, (void*)pa);
+
+    if((pte & (PTE_R|PTE_W|PTE_X)) == 0){
+      // points to a lower-level page table
+      vmprint_helper((pagetable_t)PTE2PA(pte), level + 1, child_va);
+    }
+  }
+}
+
 void
 vmprint(pagetable_t pagetable) {
-  // your code here
+  printf("page table %p\n", pagetable);
+  vmprint_helper(pagetable, 0, 0);
 }
 #endif
 
