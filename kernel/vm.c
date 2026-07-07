@@ -117,6 +117,32 @@ walk(pagetable_t pagetable, uint64 va, int alloc)
   return &pagetable[PX(0, va)];
 }
 
+// only used for handle super pages
+pte_t *
+superwalk(pagetable_t pagetable, uint64 va, int alloc)
+{
+  if(va >= MAXVA)
+    panic("superwalk");
+
+  for(int level = 2; level > 1; level--) {
+    pte_t *pte = &pagetable[PX(level, va)];
+    if(*pte & PTE_V) {
+      pagetable = (pagetable_t)PTE2PA(*pte);
+#ifdef LAB_PGTBL
+      if(PTE_LEAF(*pte)) {
+        return pte;
+      }
+#endif
+    } else {
+      if(!alloc || (pagetable = (pde_t*)kalloc()) == 0)
+        return 0;
+      memset(pagetable, 0, PGSIZE);
+      *pte = PA2PTE(pagetable) | PTE_V;
+    }
+  }
+  return &pagetable[PX(1, va)];
+}
+
 // Look up a virtual address, return the physical address,
 // or 0 if not mapped.
 // Can only be used to look up user pages.
@@ -228,6 +254,37 @@ mappages(pagetable_t pagetable, uint64 va, uint64 size, uint64 pa, int perm)
   return 0;
 }
 
+int
+mapsuperpages(pagetable_t pagetable, uint64 va, uint64 size, uint64 pa, int perm)
+{
+  uint64 a, last;
+  pte_t *pte;
+
+  if((va % SUPERPGSIZE) != 0)
+    panic("mapsuperpages: va not aligned");
+
+  if((size % SUPERPGSIZE) != 0)
+    panic("mapsuperpages: size not aligned");
+
+  if(size == 0)
+    panic("mapsuperpages: size");
+  
+  a = va;
+  last = va + size - SUPERPGSIZE;
+  for(;;){
+    if((pte = superwalk(pagetable, a, 1)) == 0)
+      return -1;
+    if(*pte & PTE_V)
+      panic("mapsuperpages: remap");
+    *pte = PA2PTE(pa) | perm | PTE_V;
+    if(a == last)
+      break;
+    a += SUPERPGSIZE;
+    pa += SUPERPGSIZE;
+  }
+  return 0;
+}
+
 // create an empty user page table.
 // returns 0 if out of memory.
 pagetable_t
@@ -285,19 +342,32 @@ uvmalloc(pagetable_t pagetable, uint64 oldsz, uint64 newsz, int xperm)
 
   oldsz = PGROUNDUP(oldsz);
   for(a = oldsz; a < newsz; a += sz){
-    sz = PGSIZE;
-    mem = kalloc();
+    if(a == SUPERPGROUNDDOWN(a) && newsz - a >= SUPERPGSIZE){
+      sz = SUPERPGSIZE;
+      mem = superalloc();
+    } else {
+      sz = PGSIZE;
+      mem = kalloc();
+    }
     if(mem == 0){
       uvmdealloc(pagetable, a, oldsz);
       return 0;
     }
 #ifndef LAB_SYSCALL
     memset(mem, 0, sz);
- #endif
-    if(mappages(pagetable, a, sz, (uint64)mem, PTE_R|PTE_U|xperm) != 0){
-      kfree(mem);
-      uvmdealloc(pagetable, a, oldsz);
-      return 0;
+#endif
+    if(sz == SUPERPGSIZE){
+      if(mapsuperpages(pagetable, a, sz, (uint64)mem, PTE_R|PTE_U|xperm) != 0){
+        superfree(mem);
+        uvmdealloc(pagetable, a, oldsz);
+        return 0;
+      }
+    }else{
+      if(mappages(pagetable, a, sz, (uint64)mem, PTE_R|PTE_U|xperm) != 0){
+        kfree(mem);
+        uvmdealloc(pagetable, a, oldsz);
+        return 0;
+      }
     }
   }
   return newsz;

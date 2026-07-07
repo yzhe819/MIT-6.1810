@@ -23,11 +23,35 @@ struct {
   struct run *freelist;
 } kmem;
 
+struct {
+  struct spinlock lock;
+  struct run *freelist;
+} supermem;
+
 void
 kinit()
 {
+  // init lock
   initlock(&kmem.lock, "kmem");
-  freerange(end, (void*)PHYSTOP);
+  initlock(&supermem.lock, "supermem");
+  // round up to the near 2MB bound
+  char *pgstart = (char*)SUPERPGROUNDUP((uint64)end);
+
+  // the small leftover before the aligned region
+  freerange(end, pgstart);
+
+  // carve out SUPERPGAMOUNT * 2MB region for superpages
+  supermem.freelist = 0;
+  char *p = pgstart;
+  for(int i = 0; i < SUPERPGAMOUNT; i++){
+    struct run *r = (struct run*)p;
+    r->next = supermem.freelist;
+    supermem.freelist = r;
+    p += SUPERPGSIZE; // exactly 2MB
+  }
+
+  // the reminder memory will be used as the normal one
+  freerange(p, (void*)PHYSTOP);
 }
 
 void
@@ -78,5 +102,41 @@ kalloc(void)
 
   if(r)
     memset((char*)r, 5, PGSIZE); // fill with junk
+  return (void*)r;
+}
+
+
+void
+superfree(void *pa)
+{
+  struct run *r;
+
+  if(((uint64)pa % SUPERPGSIZE) != 0 || (char*)pa < end || (uint64)pa >= PHYSTOP)
+    panic("superfree");
+
+  // Fill with junk to catch dangling refs.
+  memset(pa, 1, SUPERPGSIZE);
+
+  r = (struct run*)pa;
+
+  acquire(&supermem.lock);
+  r->next = supermem.freelist;
+  supermem.freelist = r;
+  release(&supermem.lock);
+}
+
+void *
+superalloc(void)
+{
+  struct run *r;
+
+  acquire(&supermem.lock);
+  r = supermem.freelist;
+  if(r)
+    supermem.freelist = r->next;
+  release(&supermem.lock);
+
+  if(r)
+    memset((char*)r, 1, SUPERPGSIZE); // fill with junk
   return (void*)r;
 }
