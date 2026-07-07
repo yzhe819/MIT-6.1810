@@ -143,14 +143,16 @@ walkaddr(pagetable_t pagetable, uint64 va)
 
 #if defined(LAB_PGTBL) || defined(SOL_MMAP) || defined(SOL_COW)
 void 
-vmprint_helper(pagetable_t pagetable, int level, uint64 va) {
-  if (level == 4) {
+_vmprint(pagetable_t pagetable, uint64 va, int level) {
+  if (level > 3) {
     return;
   }
 
   // there are 2^9 = 512 PTEs in a page table.
   for(int i = 0; i < 512; i++){
-    uint64 child_va = va | ((uint64)i << PXSHIFT(3 - level));
+    // 1ULL => 1 unsigned long long
+    uint64 span = 1ULL << PXSHIFT(3 - level);
+    uint64 child = va + i * span;
     pte_t pte = pagetable[i];
     uint64 pa = PTE2PA(pte);
 
@@ -162,11 +164,11 @@ vmprint_helper(pagetable_t pagetable, int level, uint64 va) {
       printf(" ..");
     }
 
-    printf("%p: pte %p pa %p\n", (void*)child_va, (void*)pte, (void*)pa);
+    printf("%p: pte %p pa %p\n", (void*)child, (void*)pte, (void*)pa);
 
     if((pte & (PTE_R|PTE_W|PTE_X)) == 0){
       // points to a lower-level page table
-      vmprint_helper((pagetable_t)PTE2PA(pte), level + 1, child_va);
+      _vmprint((pagetable_t)PTE2PA(pte), child, level + 1);
     }
   }
 }
@@ -174,7 +176,7 @@ vmprint_helper(pagetable_t pagetable, int level, uint64 va) {
 void
 vmprint(pagetable_t pagetable) {
   printf("page table %p\n", pagetable);
-  vmprint_helper(pagetable, 1, 0);
+  _vmprint(pagetable, 0, 1);
 }
 #endif
 
