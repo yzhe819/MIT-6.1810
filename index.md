@@ -38,7 +38,7 @@ Official difficulty reference:
 
 **Overview:** Explore RISC-V page tables, implement page-table inspection/printing, speed up `getpid()` with shared read-only mapping, and add superpage support in xv6.
 
-**Difficulty:** `inspect a user-process page table` · `speed up system calls` · `print a page table` · `use superpages`
+**Difficulty:** `inspect a user-process page table` (easy) · `speed up system calls` (easy) · `print a page table` (easy) · `use superpages` (moderate/hard)
 
 [Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/pgtbl.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab3-xv6-page-tables/lab3-xv6-page-tables.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/pgtbl)
 
@@ -46,6 +46,6 @@ Official difficulty reference:
 
 **Overview:** Understand trap-based system call flow, implement kernel backtrace, and add periodic user-level alarms (`sigalarm`/`sigreturn`).
 
-**Difficulty:** `risc-v assembly` · `backtrace` · `alarm`
+**Difficulty:** `risc-v assembly` (easy) · `backtrace` (moderate) · `alarm` (hard)
 
 [Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/traps.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab4-xv6-traps/lab4-xv6-traps.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/traps)
