@@ -41,3 +41,11 @@ Official difficulty reference:
 **Difficulty:** `inspect a user-process page table` · `speed up system calls` · `print a page table` · `use superpages`
 
 [Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/pgtbl.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab3-xv6-page-tables/lab3-xv6-page-tables.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/pgtbl)
+
+### Lab 4 — Traps
+
+**Overview:** Understand trap-based system call flow, implement kernel backtrace, and add periodic user-level alarms (`sigalarm`/`sigreturn`).
+
+**Difficulty:** `risc-v assembly` · `backtrace` · `alarm`
+
+[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/traps.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab4-xv6-traps/lab4-xv6-traps.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/traps)

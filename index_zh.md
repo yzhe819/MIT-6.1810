@@ -41,3 +41,11 @@
 **实验难度：** `inspect a user-process page table` · `speed up system calls` · `print a page table` · `use superpages`
 
 [官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/pgtbl.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab3-xv6-page-tables/lab3-xv6-page-tables-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/pgtbl)
+
+### Lab 4 — Traps｜陷阱
+
+**目标简述：** 理解基于 trap 的系统调用流程，实现内核 backtrace，并加入周期性用户态 alarm（`sigalarm`/`sigreturn`）机制。
+
+**实验难度：** `risc-v assembly` · `backtrace` · `alarm`
+
+[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/traps.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab4-xv6-traps/lab4-xv6-traps-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/traps)
