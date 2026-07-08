@@ -1,12 +1,10 @@
-# MIT 6.1810 Operating System Engineering — Lab Notes
+# MIT 6.1810 OS Engineering — Lab Notes
 
 [English](./README.md) · [中文](./README_zh.md)
 
 ## Course Overview
 
-MIT 6.1810 is an operating systems course offered by MIT's Department of Electrical Engineering and Computer Science, formerly known as MIT 6.828. Built on the RISC-V architecture and the xv6 teaching operating system, the course systematically covers the core mechanisms and design principles of modern operating systems.
-
-The heart of the course is its Lab assignments. Each lab targets a specific xv6 subsystem, deepening understanding of OS principles by implementing new features or improving existing mechanisms.
+MIT 6.1810 is an operating systems course offered by MIT's Department of Electrical Engineering and Computer Science, formerly known as MIT 6.828/MIT 6.S081. Built on the RISC-V architecture and the xv6 teaching operating system, the course systematically covers the core mechanisms and design principles of modern operating systems.
 
 > [!IMPORTANT]
 > All content in this repository is based on **MIT 6.1810 Operating System Engineering (Fall 2025)** and its corresponding **xv6-labs-2025** lab repository.
@@ -17,15 +15,12 @@ The heart of the course is its Lab assignments. Each lab targets a specific xv6 
 
 Most reference materials for MIT's operating system courses (6.828 / 6.S081 / 6.1810) are based on versions from 2018–2022. Since then, the Labs have undergone significant changes, making many existing write-ups outdated or no longer applicable. 
 
-So I thought — why not write one myself?
+So I thought — why not write one myself? A few things that make this repo different:
 
-A few things that make this repo different:
-
-- **Up-to-date Labs (2025 Fall)** · Based on the Fall 2025 version of the course, aligned with the current lab assignments.
-- **Bilingual write-ups** · Notes maintained in both Chinese and English, hoping to make the content accessible to a wider audience.
-- **Code and notes together** · Beyond just sharing working code, each write-up documents the reasoning, pitfalls, and debugging process — written to help readers actually understand, not just copy.
-- **Optional Challenges included** · Goes beyond the required exercises — all optional challenge problems are attempted as well.
-- **A returning perspective** · The author previously completed earlier versions of 6.828 and 6.S081, and revisits the new Labs years later to document what has changed and what hasn't.
+- *Up-to-date Labs (2025 Fall)*
+- *Code and notes together*
+- *Optional Challenges included*
+- *A returning perspective*
 
 ---
 
@@ -50,7 +45,7 @@ yzhe819/MIT-6.1810/
 │
 ├── util      Lab 1: Unix Utilities        ✓ 2026-06-25
 ├── syscall   Lab 2: System Calls          ✓ 2026-06-29
-├── pgtbl     Lab 3: Page Tables           ✓ 2026-07-07
+├── pgtbl     Lab 3: Page Tables           ✓ 2026-07-08
 ├── traps     Lab 4: Traps
 ├── cow       Lab 5: Copy-on-Write Fork
 ├── thread    Lab 6: Multithreading
