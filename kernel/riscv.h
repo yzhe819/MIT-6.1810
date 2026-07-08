@@ -362,10 +362,14 @@ typedef uint64 *pagetable_t; // 512 PTEs
 #define PGSHIFT 12  // bits of offset within a page
 
 #ifdef LAB_PGTBL
-#define SUPERPGAMOUNT 5 // assume we only need 5 super page table
+#define SUPERPGAMOUNT 16 // assume we only need 5 super page table
 #define SUPERPGSIZE (2 * (1 << 20)) // bytes per page
 #define SUPERPGROUNDUP(sz)  (((sz)+SUPERPGSIZE-1) & ~(SUPERPGSIZE-1))
-#define SUPERPGROUNDDOWN(sz) (SUPERPGROUNDUP(sz)-SUPERPGSIZE)
+// the following is the given one, this will delete one more super page size
+// when sz is match the super page size, for example, at 2mb it will still keep 2mb after superpgroundup
+// then it accidently delete one more 2mb, the sz will be 0mb 
+// #define SUPERPGROUNDDOWN(sz) (SUPERPGROUNDUP(sz)-SUPERPGSIZE)
+#define SUPERPGROUNDDOWN(sz) ((sz) & ~(SUPERPGSIZE-1)) // correct bit operation
 #endif
 
 #define PGROUNDUP(sz)  (((sz)+PGSIZE-1) & ~(PGSIZE-1))
