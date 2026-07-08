@@ -298,6 +298,53 @@ uvmcreate()
   return pagetable;
 }
 
+// Break a superpage mapping at virtual address va (must be
+// SUPERPGSIZE-aligned and currently mapped as a superpage) into
+// 512 ordinary 4KB page mappings, preserving the existing content.
+// Returns 0 on success, -1 on failure.
+int
+superpg_demote(pagetable_t pagetable, uint64 va)
+{
+  pte_t *pte;
+  uint64 oldpa;
+  uint flags;
+  char *mem;
+  int i;
+
+  if((va % SUPERPGSIZE) != 0)
+    panic("superpg_demote: va not aligned");
+
+  pte = superwalk(pagetable, va, 0);
+  if(pte == 0 || (*pte & PTE_V) == 0 || !PTE_LEAF(*pte))
+    panic("superpg_demote: not a superpage");
+
+  oldpa = PTE2PA(*pte);
+  flags = PTE_FLAGS(*pte);
+
+  // Clear the superpage PTE first so mappages() can create a
+  // level-0 page table under it (walk() will allocate one, since
+  // the level-1 PTE below no longer looks like a leaf).
+  *pte = 0;
+
+  for(i = 0; i < SUPERPGSIZE; i += PGSIZE){
+    if((mem = kalloc()) == 0)
+      goto err;
+    memmove(mem, (char*)(oldpa + i), PGSIZE);
+    if(mappages(pagetable, va + i, PGSIZE, (uint64)mem, flags) != 0){
+      kfree(mem);
+      goto err;
+    }
+  }
+
+  superfree((void*)oldpa);
+  return 0;
+
+ err:
+  // best-effort cleanup of what we've mapped so far
+  uvmunmap(pagetable, va, i / PGSIZE, 1);
+  return -1;
+}
+
 // Remove npages of mappings starting from va. va must be
 // page-aligned. It's OK if the mappings don't exist.
 // Optionally free the physical memory.
@@ -307,11 +354,35 @@ uvmunmap(pagetable_t pagetable, uint64 va, uint64 npages, int do_free)
   uint64 a;
   pte_t *pte;
   int sz = PGSIZE;
+  uint64 end = va + npages*PGSIZE;
 
   if((va % PGSIZE) != 0)
     panic("uvmunmap: not aligned");
 
   for(a = va; a < va + npages*PGSIZE; a += sz){
+    pte = superwalk(pagetable, a, 0);
+    if(pte != 0 && (*pte & PTE_V) && PTE_LEAF(*pte)){
+      uint64 supstart = SUPERPGROUNDDOWN(a);
+      uint64 supend = supstart + SUPERPGSIZE;
+      sz = SUPERPGSIZE;
+
+      // release the entire super pg
+      if(supstart >= va && supend <= end){
+        if(do_free){
+          uint64 pa = PTE2PA(*pte);
+          superfree((void*)pa);
+        }
+        *pte = 0;
+        continue;
+      } else {
+        // demote the entire page to multiple normal pages
+        if(superpg_demote(pagetable, supstart) != 0)
+          panic("uvmunmap: super pg demote failed");
+        pte = walk(pagetable, a, 0);
+      }
+    }
+
+    sz = PGSIZE;
     if((pte = walk(pagetable, a, 0)) == 0) // leaf page table entry allocated?
       continue;
     if((*pte & PTE_V) == 0)  // has physical page been allocated?
@@ -438,20 +509,38 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
   int szinc = PGSIZE;
 
   for(i = 0; i < sz; i += szinc){
-    if((pte = walk(old, i, 0)) == 0)
-      continue;
-    if((*pte & PTE_V) == 0) {
-      continue;
-    }
-    szinc = PGSIZE;
-    pa = PTE2PA(*pte);
-    flags = PTE_FLAGS(*pte);
-    if((mem = kalloc()) == 0)
-      goto err;
-    memmove(mem, (char*)pa, PGSIZE);
-    if(mappages(new, i, PGSIZE, (uint64)mem, flags) != 0){
-      kfree(mem);
-      goto err;
+    pte = superwalk(old,i,0);
+
+    // check if the super page 
+    if(pte != 0 && (*pte & PTE_V) && PTE_LEAF(*pte)){
+      szinc = SUPERPGSIZE;
+
+      pa = PTE2PA(*pte);
+      flags = PTE_FLAGS(*pte);
+      if((mem = superalloc()) == 0)
+        goto err;
+      memmove(mem, (char*)pa, SUPERPGSIZE);
+      if(mapsuperpages(new, i, SUPERPGSIZE, (uint64)mem, flags) != 0){
+        superfree(mem);
+        goto err;
+      }
+    }else{
+      if((pte = walk(old, i, 0)) == 0)
+        continue;
+      if((*pte & PTE_V) == 0) {
+        continue;
+      }
+      szinc = PGSIZE;
+
+      pa = PTE2PA(*pte);
+      flags = PTE_FLAGS(*pte);
+      if((mem = kalloc()) == 0)
+        goto err;
+      memmove(mem, (char*)pa, PGSIZE);
+      if(mappages(new, i, PGSIZE, (uint64)mem, flags) != 0){
+        kfree(mem);
+        goto err;
+      }
     }
   }
   return 0;
