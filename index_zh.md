@@ -26,7 +26,7 @@
 
 [官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/util.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab1-xv6-unix-utilities/lab1-xv6-unix-utilities-zh.md) · [中文题解](https://github.com/yzhe819/MIT-6.1810/blob/main/lab1-xv6-unix-utilities/lab1-xv6-unix-utilities-solution-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/util)
 
-### Lab 2 — System Calls｜系统调用
+### Lab 2 — System Calls｜系统调用（2d）
 
 **目标简述：** 理解系统调用机制，以及用户态（User Mode）与内核态（Kernel Mode）之间的切换过程。
 
@@ -34,7 +34,7 @@
 
 [官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/syscall.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab2-xv6-system-calls/lab2-xv6-system-calls-zh.md) · [中文题解](https://github.com/yzhe819/MIT-6.1810/blob/main/lab2-xv6-system-calls/lab2-xv6-system-calls-solution-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/syscall)
 
-### Lab 3 — Page Tables｜页表
+### Lab 3 — Page Tables｜页表（6h）
 
 **目标简述：** 探索 RISC-V 页表机制，完成页表检查/打印、通过共享只读页优化 `getpid()`，并在 xv6 中实现 superpage（大页）支持。
 
