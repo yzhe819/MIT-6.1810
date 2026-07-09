@@ -31,6 +31,7 @@ If you are new to this course, this is the best place to start. Everything relat
 A complete index of all labs, including official documentation and code repositories:
 
 ### -> [Lab Directory](./index.md)
+### -> [中文笔记入口](./index_zh.md)
 
 ---
 
