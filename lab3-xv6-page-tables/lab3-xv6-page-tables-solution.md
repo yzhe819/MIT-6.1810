@@ -1,14 +1,14 @@
-# Lab 3 实验报告
+# Lab 3 Report
 
 [English](./lab3-xv6-page-tables-solution.md) · [中文](./lab3-xv6-page-tables-solution-zh.md)
 
-**目标简述：** 探索 RISC-V 页表机制，完成页表检查/打印、通过共享只读页优化 `getpid()`，并在 xv6 中实现 superpage（大页）支持。
+**Overview:** Explore the RISC-V page table mechanism, implement page-table inspection/printing, speed up `getpid()` via a shared read-only page, and add superpage support in xv6.
 
-**实验难度：** `inspect a user-process page table` (easy) · `speed up system calls` (easy) · `print a page table` (easy) · `use superpages` (moderate/hard)
+**Difficulty:** `inspect a user-process page table` (easy) · `speed up system calls` (easy) · `print a page table` (easy) · `use superpages` (moderate/hard)
 
 ## Inspect a user-process page table (easy)
 
-按照题目要求运行 `print_pgtbl` 函数以打印页表信息，结果如下：
+Run `print_pgtbl` as required by the lab to print page-table information:
 
 ```sh
 xv6 kernel is booting
@@ -45,46 +45,47 @@ usertrap(): unexpected scause 0xd pid=4
 $ 
 ```
 
-从输出的第一行开始分析：
+Start from the first line:
 
 ```sh
 va 0x0 pte 0x21FC885B pa 0x87F22000 perm 0x5B
 ```
 
-`va` 表示虚拟地址（virtual address），对应该虚拟页面的起始地址。以第一条记录为例，页面起始地址为 `0x0`，页面大小为 4KB（对应地址范围 `0x0` 到 `0xfff`），下一页的起始地址即为 `0x1000`。
+- `va` is the virtual address (virtual page base). For the first line, this page starts at `0x0`, with 4KB page size (`0x0` to `0xfff`), and the next page starts at `0x1000`.
+- `pte` (page table entry) stores both translation and permission bits. For `pte = 0x21FC885B`:
 
-`pte`（page table entry）是页表中的一条记录，负责将虚拟地址翻译为物理地址，并记录该页面的访问权限。以 `pte = 0x21FC885B` 为例，展开如下：
-
+```text
+hex: 2    1    F    C    8    8    5    B
+bin: 0010 0001 1111 1100 1000 1000 0101 1011
 ```
-十六进制:  2    1    F    C    8    8    5    B
-二进制:  0010 0001 1111 1100 1000 1000 0101 1011
-```
 
-其中最低的 10 位为权限位，即 `00 0101 1011`，转换为十六进制为 `0x5B`，对应该条记录末尾的 `perm 0x5B`。
+The low 10 bits are flags: `00 0101 1011`, i.e. `0x5B`, which matches `perm 0x5B`.
 
-`pa` 为物理地址，`pte` 中存储的是 PPN（物理页号），可通过将 `pte` 右移 10 位去除权限位、再左移 12 位得到对应的物理页起始地址。
+- `pa` is the physical address. Since PTE stores a physical page number (PPN), physical page base is obtained by removing low 10 flag bits and restoring page alignment.
 
-若已知某个特定的 `va`，可通过以下公式计算出对应的 `pa`（先算出页面起始物理地址，再加上页内偏移量）：
+For any `va`, the corresponding `pa` is:
 
-```
+```text
 PA = (PTE >> 10 << 12) | (VA & 0xFFF)
 ```
 
-xv6 里面有对应的宏用了上面的公式
+xv6 provides the macro:
 
 ```h
 #define PTE2PA(pte) (((pte) >> 10) << 12)
 ```
 
-对照第一条和第二条记录可以发现，`va` 仅相差 `0x1000`，但 `pa` 却从 `0x87F22000` 跳变为 `0x87F1F000`，这正对应题目所说明的现象：xv6 不会将用户虚拟页连续地映射到物理内存，因此对应的 `pa` 并不连续。
+Comparing the first two rows, `va` differs by only `0x1000`, but `pa` jumps from `0x87F22000` to `0x87F1F000`. This confirms the lab note: xv6 does not map consecutive virtual pages to consecutive physical pages.
 
-> 此处应补充权限位（perm）各标志位的具体含义说明，从低到高位分别是 `PTE_V`、`PTE_R`、`PTE_W`、`PTE_X`、`PTE_U`、`PTE_G`、`PTE_A`、`PTE_D`
+> Permission flags from low to high bits are: `PTE_V`, `PTE_R`, `PTE_W`, `PTE_X`, `PTE_U`, `PTE_G`, `PTE_A`, `PTE_D`.
 
 ![perm](2026-07-08%2022.28.10.png)
 
 ## Speed up system calls (easy)
 
-首先需要建立一个能够让用户态与内核态之间共享读取数据的区域，从而加速系统调用操作，避免频繁在用户态与内核态之间切换。根据题目提示，首先查看 `USYSCALL` 的数据结构，其定义位于 `memlayout.h` 中：
+The goal is to establish a shared read-only region between user and kernel space so some system calls can avoid repeated user-kernel switching overhead.
+
+First, inspect `USYSCALL` in `memlayout.h`:
 
 ```c
 #define TRAPFRAME (TRAMPOLINE - PGSIZE)
@@ -97,9 +98,9 @@ struct usyscall {
 #endif
 ```
 
-该结构体的组织方式与 `trapframe` 类似。题目要求将当前进程的 `pid` 存入 `usyscall` 页面，并且仅允许用户态对该页面执行读取操作（避免赋予多余权限带来安全隐患）。
+Its organization is similar to `trapframe`. The lab requires storing current process `pid` in this page, and user mode must only have read access.
 
-参考 `kernel/proc.c` 中对 `trapframe` 的处理方式，为 `usyscall` 在 `proc` 结构体中同样保留一份记录，代码如下：
+Following the `trapframe` pattern in `kernel/proc.c`, add `usyscall` to `struct proc`:
 
 ```c
 struct proc {
@@ -128,7 +129,7 @@ struct proc {
 };
 ```
 
-随后在分配 `proc` 的过程中一并初始化 `usyscall`，处理方式与 `trapframe` 一致；需要注意的是，必须在获取到分配好的 `pid` 之后，才能将该 `pid` 写入 `usyscall`：
+Initialize it in `allocproc()` (after PID allocation), similar to `trapframe`:
 
 ```c
 static struct proc*
@@ -186,7 +187,7 @@ found:
 }
 ```
 
-同样需要在清理逻辑中加入对应的释放操作：
+Free it in cleanup:
 
 ```c
 static void
@@ -212,7 +213,7 @@ freeproc(struct proc *p)
 }
 ```
 
-接下来需要将 `usyscall` 对应的页表项与实际物理内存关联起来，即完成映射（mapping）。在 `proc_pagetable` 函数中（该函数用于为指定 `proc` 分配页表），紧跟 `trampoline` 的映射之后加入 `USYSCALL` 的映射；若映射失败，需要清理之前已完成的步骤。需要特别注意：此处仅允许用户态读取，不应赋予额外权限：
+Then map `USYSCALL` in `proc_pagetable` (after trampoline mapping), with read-only user permission:
 
 ```c
 pagetable_t
@@ -258,7 +259,7 @@ proc_pagetable(struct proc *p)
 }
 ```
 
-同样，也需要处理释放时对应的逻辑：
+Also update unmap in `proc_freepagetable`:
 
 ```c
 void
@@ -271,19 +272,17 @@ proc_freepagetable(pagetable_t pagetable, uint64 sz)
 }
 ```
 
-回到 lab 提出的问题：哪些系统调用可以通过这种机制被加速？答案是那些被频繁调用、且返回值频繁变化的只读型系统调用，例如获取当前时间或进程运行时长（类似 `time` 系统调用），这类数据可能每个 tick 都会发生变化。若每次读取都需要切换到内核态再返回用户态，这种上下文切换的开销在高频调用场景下会被显著放大；而通过共享页面直接读取，则可以省去这部分切换成本。
+For the conceptual question ("what other calls can be sped up this way?"): frequent, read-only, quickly changing values are good candidates, e.g., time/ticks-like queries. If every read requires a kernel crossing, overhead accumulates significantly.
 
 ## Print a page table (easy)
 
-首先定位已提供框架的 `vmprint` 函数，位于 `kernel/vm.c` 中，其参数 `pagetable_t pagetable` 的类型本质上是一个 `uint64` 指针：
+The provided `vmprint` scaffold is in `kernel/vm.c`. `pagetable_t` is essentially a `uint64` pointer:
 
 ```c
 typedef uint64 *pagetable_t; // 512 PTEs
 ```
 
-查看题目要求的输出格式：第一行直接打印当前的 `pagetable` 即可（对应第 0 层），此后每进入下一层，行首多加一组 `" .."` 前缀，最大深度为三层。使用递归实现该逻辑较为直接。题目同时提示可以参考 `freewalk` 函数的实现方式：
-
-题目提示：`Use %p in your printf calls to print out full 64-bit hex PTEs and addresses as shown in the example.`
+Output requirements: print root pagetable first (level 0), then print each deeper level with one more `" .."` prefix, up to 3 levels. Recursive DFS is straightforward. The lab also suggests `freewalk` as reference:
 
 ```c
 void
@@ -306,7 +305,7 @@ freewalk(pagetable_t pagetable)
 }
 ```
 
-整体递归结构与 `freewalk` 类似，区别在于不对叶子页表项做限制性判断，而是将所有层级的页表项全部打印出来：
+Recursive implementation (print all valid entries at all levels):
 
 ```c
 #if defined(LAB_PGTBL) || defined(SOL_MMAP) || defined(SOL_COW)
@@ -349,15 +348,17 @@ vmprint(pagetable_t pagetable) {
 #endif
 ```
 
-简要说明判断逻辑：`(pte & PTE_V) == 0` 表示该页表项无效（空表项），直接跳过；`(pte & (PTE_R|PTE_W|PTE_X)) == 0` 表示该页表项指向下一级页表，此时需要递归调用（DFS 深度优先遍历）。较为绕的一点在于如何通过 `level` 和 `i` 计算出子节点对应的虚拟地址 `child`：
+Core logic:
 
-每一层对应的地址跨度需要根据该层级左移相应的位数（`PXSHIFT`），再乘以当前页表项在本级 512 个页表项中的索引 `i`，二者相加即可得到该页表项所覆盖虚拟地址范围的起始地址。
+- `(pte & PTE_V) == 0`: invalid entry, skip.
+- `(pte & (PTE_R|PTE_W|PTE_X)) == 0`: pointer to lower-level page table, recurse.
+- `child` virtual address comes from current level span plus index offset.
 
 ## Use superpages (moderate)/(hard)
 
-引入超级页（superpage）的动机在于：页表本身也需要占用内存。若采用普通大页组织内存，会需要大量的 `pte` 记录，且这些 `pte` 分散在多级页表结构中，访问效率较低；而使用超级页后，单条页表项即可覆盖更大的地址范围，无需维护大量 `pte`，从而降低存储开销、提升访问效率。
+Superpages reduce PTE count and page-table memory overhead, and may improve access efficiency by covering larger address ranges with one entry.
 
-首先定位与超级页相关的宏定义与常量，包括所需的超级页数量，位置在 `kernel/riscv.h` 中：
+Start with macros/constants in `kernel/riscv.h`:
 
 ```c
 #ifdef LAB_PGTBL
@@ -366,7 +367,7 @@ vmprint(pagetable_t pagetable) {
 #define SUPERPGROUNDUP(sz)  (((sz)+SUPERPGSIZE-1) & ~(SUPERPGSIZE-1))
 ```
 
-随后进入 `kernel/kalloc.c`，仿照普通页表的组织方式定义对应的数据结构，并在分配普通页表之前，预先从物理内存中划出一部分地址空间留给超级页使用：
+In `kernel/kalloc.c`, create a dedicated freelist for superpages, and reserve some 2MB-aligned physical regions before normal page allocation:
 
 ```c
 struct {
@@ -406,14 +407,11 @@ kinit()
 }
 ```
 
-上述代码的核心逻辑：首先将起始地址 `end` 向上对齐到最近的 2MB 边界，使用宏 `SUPERPGROUNDUP` 完成；`end` 到该对齐起始地址之间的这部分“零头”内存并不会被浪费，而是继续分配给普通页表使用。
+`end` is rounded up to nearest 2MB boundary via `SUPERPGROUNDUP`. The small gap before that boundary is still reused for normal pages, not wasted.
 
-之后根据设定的数量 `SUPERPGAMOUNT` 依次划分出对应的超级页区域；划分完成后，剩余的内存全部交给普通页表使用。
-
-接下来对照 `kfree` 与 `kalloc`，实现超级页对应的版本：
+Implement `superfree` / `superalloc` analogous to `kfree` / `kalloc`:
 
 ```c
-
 void
 superfree(void *pa)
 {
@@ -450,16 +448,14 @@ superalloc(void)
 }
 ```
 
-同时需要将这两个方法导出，以便测试程序调用，在 `kernel/defs.h` 中添加声明：
+Expose declarations in `kernel/defs.h`:
 
 ```c
 void*           superalloc(void);
 void            superfree(void *);
 ```
 
-回到题目本身，题目建议以 `kernel/sysproc.c` 中的 `sys_sbrk` 函数作为切入点，该函数由 `sbrk` 系统调用触发。沿着调用路径可以找到 `growproc` 函数，它负责为 `sbrk` 预先分配内存。
-
-顺着 `sbrk` 追踪到 `growproc` 后可以发现，其内部实际调用了 `uvmalloc` 与 `uvmdealloc` 完成分配与释放。先看 `uvmalloc` 部分：在原有分配逻辑基础上增加一个判断——如果满足超级页的分配条件，则调用新增的超级页方法；否则仍沿用原有逻辑：
+Tracing from `sys_sbrk` to `growproc`, actual allocation/free work happens in `uvmalloc` / `uvmdealloc`. Extend `uvmalloc` to choose superpage allocation when range is aligned and large enough:
 
 ```c
 uint64
@@ -506,9 +502,7 @@ uvmalloc(pagetable_t pagetable, uint64 oldsz, uint64 newsz, int xperm)
 }
 ```
 
-针对超级页新增了一个专门的映射方法，其内部同样用到了类似 `walk` 的地址转换逻辑，这里改为 `superwalk`。由于超级页是直接分配到 2MB 粒度的物理页，因此地址转换只需要两级，而非普通页表的三级。以下是新增的 `mapsuperpages` 和 `superwalk` 方法：
-
-> 需要说明的是，`superwalk` 的 `else` 分支处理的是页表页（page table page）本身不存在的情况——此时需要新分配一个页表页。该页表页始终是标准的 512 个 `pte` 组织形式，大小固定为 4KB，因此这里沿用 `PGSIZE` 是正确的，无需改动。
+Add dedicated mapping helper and walker. Since superpages map at 2MB granularity, traversal only needs to stop at level-1 entries:
 
 ```c
 // only used for handle super pages
@@ -569,9 +563,9 @@ mapsuperpages(pagetable_t pagetable, uint64 va, uint64 size, uint64 pa, int perm
 }
 ```
 
-> `superwalk` 中的 `for(int level = 2; level > 1; level--)` 实际只会执行一次（`level = 2`），随后直接返回第 1 级页表中的 `pte`。这是因为在 Sv39 分页机制下，第 1 级页表项本身即可作为叶子节点（leaf），对应覆盖 2MB 的地址范围，因此超级页的地址转换只需经过第 2 级到第 1 级这一步，无需像普通 4KB 页那样再下探到第 0 级。(只有两层)
+`for(int level = 2; level > 1; level--)` effectively runs once (for level 2), then returns the level-1 PTE. In Sv39, level-1 leaf entries can represent 2MB mappings, so you do not descend to level 0 as with 4KB pages.
 
-接下来根据题目要求修改 `uvmcopy()` 与 `uvmunmap()`：
+Then modify `uvmcopy()` and `uvmunmap()`:
 
 ```c
 int
@@ -675,7 +669,7 @@ uvmunmap(pagetable_t pagetable, uint64 va, uint64 npages, int do_free)
 }
 ```
 
-当 `sbrk` 释放部分超级页时（例如仅释放该超级页最后 4096 字节所对应的区域），需要将整个超级页“降级”为若干个普通页，因此新增了对应的降级函数：
+When `sbrk` frees only part of a superpage (e.g., last 4096 bytes), the superpage must be demoted into regular pages:
 
 ```c
 int
@@ -722,24 +716,22 @@ superpg_demote(pagetable_t pagetable, uint64 va)
 }
 ```
 
-最后一步，需要修正题目原本给出的宏定义，原因在于给定的 `SUPERPGROUNDDOWN` 存在边界处理缺陷。
-
-具体分析 `SUPERPGROUNDDOWN` 的实现：它先调用 `SUPERPGROUNDUP`，再减去一个完整的 `SUPERPGSIZE`。当地址本身没有对齐到 `SUPERPGSIZE` 时，这种做法是合理的；但当地址恰好已经对齐（例如地址正好是 2MB）时，`SUPERPGROUNDUP` 会原样返回该地址（因为它已经是对齐的），随后再减去一个 `SUPERPGSIZE`，结果就相当于多减了一整个超级页的大小——即向下取整反而跳过了正确的边界。
+Finally, fix the provided `SUPERPGROUNDDOWN` macro. The original definition has a boundary bug:
 
 ```h
 SUPERPGROUNDDOWN(sz) = SUPERPGROUNDUP(sz) - SUPERPGSIZE
 
-第一步 SUPERPGROUNDUP(0x200000):
+Step 1: SUPERPGROUNDUP(0x200000)
 = (0x200000 + 0x200000 - 1) & ~(0x200000 - 1)
 = 0x3FFFFF & ~0x1FFFFF
-= 0x200000        // 已经对齐，向上取整还是它自己
+= 0x200000        // already aligned
 
-第二步：
+Step 2:
 = 0x200000 - 0x200000
-= 0x0             // ← 错误！本应还是 0x200000
+= 0x0             // wrong, expected 0x200000
 ```
 
-因此需要将该宏改为直接使用位运算完成向下取整：
+Use direct bit masking for round-down:
 
 ```h
 #ifdef LAB_PGTBL
@@ -754,9 +746,9 @@ SUPERPGROUNDDOWN(sz) = SUPERPGROUNDUP(sz) - SUPERPGSIZE
 #endif
 ```
 
-## Lab 3 整体测试
+## Full Lab 3 test
 
-完成所有练习后，执行以下命令对 Lab 3 进行完整测试，验证各功能实现的正确性：
+After implementing all parts, run the full grader:
 
 ```sh
 ./grade-lab-pgtbl

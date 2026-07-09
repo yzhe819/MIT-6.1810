@@ -40,7 +40,7 @@ Official difficulty reference:
 
 **Difficulty:** `inspect a user-process page table` (easy) · `speed up system calls` (easy) · `print a page table` (easy) · `use superpages` (moderate/hard)
 
-[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/pgtbl.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab3-xv6-page-tables/lab3-xv6-page-tables.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/pgtbl)
+[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/pgtbl.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab3-xv6-page-tables/lab3-xv6-page-tables.md) · [Solution](https://github.com/yzhe819/MIT-6.1810/blob/main/lab3-xv6-page-tables/lab3-xv6-page-tables-solution.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/pgtbl)
 
 ### Lab 4 — Traps
 
