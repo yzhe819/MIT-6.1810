@@ -139,6 +139,7 @@ panic(char *s)
   panicking = 1;
   printf("panic: ");
   printf("%s\n", s);
+  backtrace(); // print the backtrace info
   panicked = 1; // freeze uart output from other CPUs
   for(;;)
     ;
@@ -148,4 +149,25 @@ void
 printfinit(void)
 {
   initlock(&pr.lock, "pr");
+}
+
+void
+backtrace(void)
+{
+  uint64 fp = r_fp();
+  // calculate the top of the stack
+  uint64 top = PGROUNDUP(fp);
+
+  printf("backtrace:\n");
+  while(fp < top){
+    uint64 ra = *(uint64*)(fp - 8);
+    printf("%p\n", (void*)ra);
+    // to find out the fp for the invoker
+    // this means to follow the invoke chain to print ra from the entire stack
+    uint64 next_fp = *(uint64*)(fp - 16);
+    // if beyond the stack top or not exist, just break
+    if (next_fp >= top || next_fp == 0)
+      break;
+    fp = next_fp;
+  }
 }
