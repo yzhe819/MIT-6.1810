@@ -382,7 +382,6 @@ uvmunmap(pagetable_t pagetable, uint64 va, uint64 npages, int do_free)
       }
     }
 
-    sz = PGSIZE;
     if((pte = walk(pagetable, a, 0)) == 0) // leaf page table entry allocated?
       continue;
     if((*pte & PTE_V) == 0)  // has physical page been allocated?
