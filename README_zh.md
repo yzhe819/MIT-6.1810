@@ -48,11 +48,10 @@ yzhe819/MIT-6.1810/
 ├── pgtbl     Lab 3: Page Tables           ✓ 2026-07-08
 ├── traps     Lab 4: Traps                 ✓ 2026-07-10
 ├── cow       Lab 5: Copy-on-Write Fork
-├── thread    Lab 6: Multithreading
-├── net       Lab 7: Network Driver
-├── lock      Lab 8: Locks
-├── fs        Lab 9: File System
-└── mmap      Lab 10: Mmap
+├── net       Lab 6: Network Driver
+├── lock      Lab 7: Locks
+├── fs        Lab 8: File System
+└── mmap      Lab 9: Mmap
 ```
 
 ---
