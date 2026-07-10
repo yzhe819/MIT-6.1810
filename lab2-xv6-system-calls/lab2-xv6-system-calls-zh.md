@@ -4,7 +4,7 @@
 
 在上一个实验中，你通过系统调用实现了若干实用工具。本实验将向 xv6 添加新的系统调用，帮助你理解系统调用的工作原理，并深入接触 xv6 内核的部分实现细节。后续实验中还会继续添加更多系统调用。
 
-在开始编写代码之前，请先阅读 xv6 教材的第 2 章，以及第 4 章的 4.3 和 4.4 节，并了解以下相关源文件：
+在开始编写代码之前，请先阅读 [xv6 手册](https://pdos.csail.mit.edu/6.S081/2020/xv6/book-riscv-rev1.pdf) 的第 2 章，以及第 4 章的 4.3 和 4.4 节，并了解以下相关源文件：
 
 - 将系统调用路由到内核的用户态"桩代码"位于 `user/usys.S`，由 `make` 时执行 `user/usys.pl` 生成。声明位于 `user/user.h`。
 - 将系统调用分发到对应内核函数的内核态代码位于 `kernel/syscall.c` 和 `kernel/syscall.h`。
@@ -24,7 +24,7 @@ $ make clean
 
 在大多数情况下，打印语句已足够用于调试内核，但有时需要单步执行代码或获取调用栈回溯，此时 GDB 调试器将派上用场。
 
-为熟悉 GDB 的使用，请运行 `make qemu-gdb`，然后在另一个窗口中启动 GDB（参见指引页面中的 GDB 资料）。打开两个窗口后，在 GDB 窗口中输入：
+为熟悉 GDB 的使用，请运行 `make qemu-gdb`，然后在另一个窗口中启动 GDB（参见[指导页面](https://pdos.csail.mit.edu/6.1810/2025/labs/guidance.html)中的 GDB 资料）。打开两个窗口后，在 GDB 窗口中输入：
 
 ```
 (gdb) b syscall
@@ -47,7 +47,7 @@ Thread 2 hit Breakpoint 1, syscall () at kernel/syscall.c:243
 
 2. 多次输入 `n` 跳过 `struct proc *p = myproc();` 语句。执行完该语句后，输入 `p /x *p`，以十六进制打印当前进程的 `proc` 结构体（见 `kernel/proc.h`）。`p->trapframe->a7` 的值是什么，它代表什么含义？（提示：参考 `user/init.c`，即 xv6 启动的第一个用户程序，以及其编译后的汇编文件 `user/init.asm`。）
 
-3. 处理器当前运行在 supervisor 模式，可以打印特权寄存器，例如 `sstatus`（详见 RISC-V 特权指令文档）：
+3. 处理器当前运行在 supervisor 模式，可以打印特权寄存器，例如 `sstatus`（详见 [RISC-V 特权指令文档](https://github.com/riscv/riscv-isa-manual/releases/download/Priv-v1.12/riscv-privileged-20211203.pdf)）：
    ```
    (gdb) p /x $sstatus
    ```
@@ -78,6 +78,8 @@ Thread 2 hit Breakpoint 1, syscall () at kernel/syscall.c:243
    (gdb) p p->name
    ```
    内核 panic 时正在运行的进程名称是什么？其进程 ID（`pid`）是多少？
+
+如有需要，可回看 [Using the GNU Debugger](https://pdos.csail.mit.edu/6.828/2019/lec/gdb_slides.pdf)。[指导页面](https://pdos.csail.mit.edu/6.1810/2025/labs/guidance.html)也提供了调试建议。
 
 ---
 

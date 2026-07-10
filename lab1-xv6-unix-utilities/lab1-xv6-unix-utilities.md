@@ -7,7 +7,7 @@ This lab will familiarize you with xv6 and its system calls.
 
 ## Boot Xv6 `(easy)`
 
-Have a look at the [lab tools page](#) for information about how to set up your computer to run these labs.
+Have a look at the [lab tools page](https://pdos.csail.mit.edu/6.1810/2025/labs/tools.html) for information about how to set up your computer to run these labs.
 
 ### Clone the Repository
 
@@ -16,7 +16,7 @@ $ git clone git://g.csail.mit.edu/xv6-labs-2025
 $ cd xv6-labs-2025
 ```
 
-The files you need for this and subsequent labs are distributed using Git. For each lab you will check out a version of xv6 tailored for that lab. To learn more about Git, take a look at the [Git user's manual](#), or [this CS-oriented overview of Git](#).
+The files you need for this and subsequent labs are distributed using Git. For each lab you will check out a version of xv6 tailored for that lab. To learn more about Git, take a look at the [Git user's manual](http://www.kernel.org/pub/software/scm/git/docs/user-manual.html), or [this CS-oriented overview of Git](http://eagain.net/articles/git-for-computer-scientists/).
 
 ### Saving Progress with Git
 
@@ -166,7 +166,7 @@ Feel free to use C's `printf()` in your `memdump()`.
 **Format characters:**
 
 | Character | Meaning |
---|
+| --- | --- |
 | `i` | Next 4 bytes as a 32-bit integer (decimal) |
 | `p` | Next 8 bytes as a 64-bit integer (hex) |
 | `h` | Next 2 bytes as a 16-bit integer (decimal) |
