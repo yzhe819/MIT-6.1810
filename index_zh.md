@@ -74,3 +74,11 @@
 **实验难度：** `memory allocator` (hard) · `read-write lock` (moderate/hard)
 
 [官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/lock.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab7-xv6-locks/lab7-xv6-locks-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/lock)
+
+### Lab 8 — File System｜文件系统
+
+**目标简述：** 为 xv6 文件系统加入二级间接块支持以实现大文件，并实现符号链接（`symlink`）及 `open()` 的跟随/不跟随语义。
+
+**实验难度：** `large files` (hard) · `symbolic links` (moderate)
+
+[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/fs.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab8-xv6-file-system/lab8-xv6-file-system-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/fs)

@@ -74,3 +74,11 @@ Official difficulty reference:
 **Difficulty:** `memory allocator` (hard) · `read-write lock` (moderate/hard)
 
 [Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/lock.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab7-xv6-locks/lab7-xv6-locks.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/lock)
+
+### Lab 8 — File System
+
+**Overview:** Extend xv6 file system with doubly-indirect inode blocks for large files and implement symbolic links (`symlink`) with `open()` follow/no-follow semantics.
+
+**Difficulty:** `large files` (hard) · `symbolic links` (moderate)
+
+[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/fs.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab8-xv6-file-system/lab8-xv6-file-system.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/fs)
