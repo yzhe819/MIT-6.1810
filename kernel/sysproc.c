@@ -108,14 +108,32 @@ sys_uptime(void)
   return xticks;
 }
 
+
+// sigalarm(0, 0) should not continue the alarm signing
 uint64
 sys_sigalarm(void)
 {
-  return 0
+  int n;
+  uint64 h;
+
+  argint(0, &n); // get interval
+  argaddr(1, &h); // get handler
+
+  struct proc *p = myproc();
+  p->ticks = 0; // reset the ticks
+  p->interval = n;
+  p->handler = (void*)h;
+
+  return 0;
 }
 
 uint64
 sys_sigreturn(void)
 {
-  return 0
+  struct proc *p = myproc();
+
+  p->alarm_state = 0;
+  *p->trapframe = *p->save;
+
+  return p->trapframe->a0;
 }
