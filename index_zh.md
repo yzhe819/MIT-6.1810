@@ -66,3 +66,11 @@
 **实验难度：** `part one: nic` · `part two: udp receive`
 
 [官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/net.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab6-xv6-network-driver/lab6-xv6-network-driver-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/net)
+
+### Lab 7 — Locks｜锁
+
+**目标简述：** 重构内存分配器以降低锁竞争（`kalloc`/`kfree` 每核空闲链表 + stealing），并在 xv6 中实现写者优先的读写自旋锁。
+
+**实验难度：** `memory allocator` (hard) · `read-write lock` (moderate/hard)
+
+[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/lock.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab7-xv6-locks/lab7-xv6-locks-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/lock)

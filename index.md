@@ -66,3 +66,11 @@ Official difficulty reference:
 **Difficulty:** `part one: nic` · `part two: udp receive`
 
 [Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/net.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab6-xv6-network-driver/lab6-xv6-network-driver.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/net)
+
+### Lab 7 — Locks
+
+**Overview:** Redesign the allocator to reduce lock contention (`kalloc`/`kfree` per-CPU freelists + stealing), and implement a writer-priority read-write spinlock in xv6.
+
+**Difficulty:** `memory allocator` (hard) · `read-write lock` (moderate/hard)
+
+[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/lock.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab7-xv6-locks/lab7-xv6-locks.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/lock)
