@@ -49,3 +49,11 @@ Official difficulty reference:
 **Difficulty:** `risc-v assembly` (easy) · `backtrace` (moderate) · `alarm` (hard)
 
 [Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/traps.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab4-xv6-traps/lab4-xv6-traps.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/traps)
+
+### Lab 5 — Copy-on-Write Fork
+
+**Overview:** Implement COW fork in xv6 by sharing pages initially, handling write faults lazily, and maintaining per-page reference counts correctly.
+
+**Difficulty:** `implement copy-on-write fork`
+
+[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/cow.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab5-xv6-copy-on-write/lab5-xv6-copy-on-write.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/cow)

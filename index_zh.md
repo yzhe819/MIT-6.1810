@@ -49,3 +49,11 @@
 **实验难度：** `risc-v assembly` (easy) · `backtrace` (moderate) · `alarm` (hard)
 
 [官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/traps.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab4-xv6-traps/lab4-xv6-traps-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/traps)
+
+### Lab 5 — Copy-on-Write Fork｜写时复制
+
+**目标简述：** 在 xv6 中实现 COW fork：初始共享物理页、写入时按需复制，并正确维护物理页引用计数。
+
+**实验难度：** `implement copy-on-write fork`
+
+[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/cow.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab5-xv6-copy-on-write/lab5-xv6-copy-on-write-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/cow)
