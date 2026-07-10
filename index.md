@@ -82,3 +82,11 @@ Official difficulty reference:
 **Difficulty:** `large files` (hard) · `symbolic links` (moderate)
 
 [Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/fs.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab8-xv6-file-system/lab8-xv6-file-system.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/fs)
+
+### Lab 9 — mmap
+
+**Overview:** Implement lazy file-backed memory mapping in xv6 with `mmap`/`munmap`, VMA tracking, page-fault-driven allocation/load, shared-map writeback, and fork/exit handling.
+
+**Difficulty:** `mmap/munmap` (hard) · `VMA + page-fault path` (hard)
+
+[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/mmap.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab9-xv6-mmap/lab9-xv6-mmap.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/mmap)

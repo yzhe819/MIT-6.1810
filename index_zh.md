@@ -82,3 +82,11 @@
 **实验难度：** `large files` (hard) · `symbolic links` (moderate)
 
 [官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/fs.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab8-xv6-file-system/lab8-xv6-file-system-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/fs)
+
+### Lab 9 — mmap｜内存映射
+
+**目标简述：** 在 xv6 中实现基于文件的懒加载内存映射（`mmap`/`munmap`），包括 VMA 管理、缺页触发分配与读入、共享映射回写，以及 fork/exit 下的映射处理。
+
+**实验难度：** `mmap/munmap` (hard) · `VMA + 缺页处理路径` (hard)
+
+[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/mmap.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab9-xv6-mmap/lab9-xv6-mmap-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/mmap)
