@@ -57,3 +57,12 @@ Official difficulty reference:
 **Difficulty:** `implement copy-on-write fork`
 
 [Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/cow.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab5-xv6-copy-on-write/lab5-xv6-copy-on-write.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/cow)
+
+
+### Lab 6 — Network Driver
+
+**Overview:** Implement E1000 TX/RX driver paths and complete UDP receive path (`ip_rx`, `sys_recv`, `sys_bind`) in xv6 networking stack.
+
+**Difficulty:** `part one: nic` · `part two: udp receive`
+
+[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/net.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab6-xv6-network-driver/lab6-xv6-network-driver.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/net)
