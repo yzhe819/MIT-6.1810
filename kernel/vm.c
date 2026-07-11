@@ -460,14 +460,36 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
 uint64
 vmfault(pagetable_t pagetable, uint64 va, int read)
 {
-  uint64 mem;
+  uint64 pa, mem;
+  pte_t *pte;
+  uint flags;
   struct proc *p = myproc();
 
   if (va >= p->sz)
     return 0;
   va = PGROUNDDOWN(va);
   if(ismapped(pagetable, va)) {
-    return 0;
+    if(read == 1){
+      return 0;
+    }
+    pte = walk(pagetable, va, 0);
+    pa = PTE2PA(*pte);
+    flags = PTE_FLAGS(*pte);
+    if(flags & PTE_C){
+      mem = (uint64) kalloc();
+      if(mem == 0){
+        return 0;
+      }
+      // remove cow symbol & add the write premisson back
+      flags = (flags & ~PTE_C) | PTE_W;
+      memmove((char*)mem, (char*)pa, PGSIZE);
+      // use this new mem space and flags to build pte
+      *pte = PA2PTE(mem) | flags;
+      decrefcnt((void*)pa);
+      return mem;
+    } else {
+      return 0;
+    }
   }
   mem = (uint64) kalloc();
   if(mem == 0)
