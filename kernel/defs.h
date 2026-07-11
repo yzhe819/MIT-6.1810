@@ -59,6 +59,8 @@ void            ireclaim(int);
 void*           kalloc(void);
 void            kfree(void *);
 void            kinit(void);
+uint8           increfcnt(void *);
+uint8           decrefcnt(void *);
 
 // log.c
 void            initlog(int, struct superblock*);
