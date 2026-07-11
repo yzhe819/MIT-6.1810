@@ -306,19 +306,27 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
       continue;   // page table entry hasn't been allocated
     if((*pte & PTE_V) == 0)
       continue;   // physical page hasn't been allocated
+    
     pa = PTE2PA(*pte);
     flags = PTE_FLAGS(*pte);
-    if((mem = kalloc()) == 0)
-      goto err;
-    memmove(mem, (char*)pa, PGSIZE);
-    if(mappages(new, i, PGSIZE, (uint64)mem, flags) != 0){
-      kfree(mem);
+
+    if(flags & PTE_W){
+      flags = (flags & ~PTE_W) | PTE_C;
+    }
+
+    // update the flags for parent record
+    *pte = PA2PTE(pa) | flags;
+
+    if(mappages(new, i, PGSIZE, pa, flags) != 0){
       goto err;
     }
+
+    increfcnt(pa);
   }
   return 0;
 
  err:
+  // do the free, but it only cause the counter -1
   uvmunmap(new, 0, i / PGSIZE, 1);
   return -1;
 }
