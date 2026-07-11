@@ -299,7 +299,6 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
   pte_t *pte;
   uint64 pa, i;
   uint flags;
-  char *mem;
 
   for(i = 0; i < sz; i += PGSIZE){
     if((pte = walk(old, i, 0)) == 0)
@@ -321,7 +320,7 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
       goto err;
     }
 
-    increfcnt(pa);
+    increfcnt((void*)pa);
   }
   return 0;
 
@@ -366,9 +365,15 @@ copyout(pagetable_t pagetable, uint64 dstva, char *src, uint64 len)
     }
 
     pte = walk(pagetable, va0, 0);
-    // forbid copyout over read-only user text pages.
-    if((*pte & PTE_W) == 0)
+    if(*pte & PTE_C) {
+      pa0 = vmfault(pagetable, va0, 0);
+      if(pa0 == 0) {
+        return -1;
+      }
+    } else if ((*pte & PTE_W) == 0){
+      // forbid copyout over read-only user text pages.
       return -1;
+    }
       
     n = PGSIZE - (dstva - va0);
     if(n > len)
@@ -485,7 +490,7 @@ vmfault(pagetable_t pagetable, uint64 va, int read)
       memmove((char*)mem, (char*)pa, PGSIZE);
       // use this new mem space and flags to build pte
       *pte = PA2PTE(mem) | flags;
-      decrefcnt((void*)pa);
+      kfree((void*)pa);
       return mem;
     } else {
       return 0;
