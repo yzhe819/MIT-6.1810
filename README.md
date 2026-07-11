@@ -48,7 +48,7 @@ yzhe819/MIT-6.1810/
 ├── syscall   Lab 2: System Calls          ✓ 2026-06-29
 ├── pgtbl     Lab 3: Page Tables           ✓ 2026-07-08
 ├── traps     Lab 4: Traps                 ✓ 2026-07-10
-├── cow       Lab 5: Copy-on-Write Fork
+├── cow       Lab 5: Copy-on-Write Fork    ✓ 2026-07-12
 ├── net       Lab 6: Network Driver
 ├── lock      Lab 7: Locks
 ├── fs        Lab 8: File System

@@ -30,7 +30,8 @@ MIT 6.1810 是麻省理工学院计算机科学系的操作系统课程，其前
 
 各实验详细索引，包含官方文档、中文汉化及代码仓库链接：
 
-### -> [Lab 目录](./index_zh.md)
+### -> [中文笔记入口](./index_zh.md)
+### -> [Lab Directory](./index.md)
 
 ---
 
@@ -47,7 +48,7 @@ yzhe819/MIT-6.1810/
 ├── syscall   Lab 2: System Calls          ✓ 2026-06-29
 ├── pgtbl     Lab 3: Page Tables           ✓ 2026-07-08
 ├── traps     Lab 4: Traps                 ✓ 2026-07-10
-├── cow       Lab 5: Copy-on-Write Fork
+├── cow       Lab 5: Copy-on-Write Fork    ✓ 2026-07-12
 ├── net       Lab 6: Network Driver
 ├── lock      Lab 7: Locks
 ├── fs        Lab 8: File System
