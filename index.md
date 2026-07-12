@@ -48,7 +48,7 @@ Official difficulty reference:
 
 **Difficulty:** `risc-v assembly` (easy) · `backtrace` (moderate) · `alarm` (hard)
 
-[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/traps.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab4-xv6-traps/lab4-xv6-traps.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/traps)
+[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/traps.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab4-xv6-traps/lab4-xv6-traps.md) · [Solution](https://github.com/yzhe819/MIT-6.1810/blob/main/lab4-xv6-traps/lab4-xv6-traps-solution.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/traps)
 
 ### Lab 5 — Copy-on-Write Fork
 

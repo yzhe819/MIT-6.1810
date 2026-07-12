@@ -48,7 +48,7 @@
 
 **实验难度：** `risc-v assembly` (easy) · `backtrace` (moderate) · `alarm` (hard)
 
-[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/traps.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab4-xv6-traps/lab4-xv6-traps-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/traps)
+[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/traps.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab4-xv6-traps/lab4-xv6-traps-zh.md) · [中文题解](https://github.com/yzhe819/MIT-6.1810/blob/main/lab4-xv6-traps/lab4-xv6-traps-solution-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/traps)
 
 ### Lab 5 — Copy-on-Write Fork｜写时复制
 
