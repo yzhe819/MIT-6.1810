@@ -125,3 +125,27 @@ struct dns_data {
   uint32 ttl;
   uint16 len;
 } __attribute__((packed));
+
+#define UDP_MAXPAYLOAD 2048
+
+struct udp_pkt {
+  uint32 sip;
+  uint16 sport; // source port
+  uint16 dport; // destination port
+  uint16 ulen;  // length, including udp header, not including IP header
+  char payload[UDP_MAXPAYLOAD]; 
+  uint16 sum;   // checksum
+};
+
+// system bind constant
+
+#define MAX_PORTS 32
+#define MAX_QUEUE 16
+
+struct binding {
+  int in_use;
+  int port;
+  struct udp_pkt queue[MAX_QUEUE];
+  int head;
+  int count;
+};

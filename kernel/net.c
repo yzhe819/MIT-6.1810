@@ -17,6 +17,9 @@ static uint32 local_ip = MAKE_IP_ADDR(10, 0, 2, 15);
 // qemu host's ethernet address.
 static uint8 host_mac[ETHADDR_LEN] = { 0x52, 0x55, 0x0a, 0x00, 0x02, 0x02 };
 
+// the port list for binding
+struct binding bindings[MAX_PORTS];
+
 static struct spinlock netlock;
 
 void
@@ -34,10 +37,22 @@ netinit(void)
 uint64
 sys_bind(void)
 {
-  //
-  // Your code here.
-  //
+  int port;
+  argint(0, &port);
 
+  acquire(&netlock);
+  for(int i = 0; i < MAX_PORTS; i++){
+    if(bindings[i].in_use == 0){
+      bindings[i].port = port;
+      bindings[i].head = 0;
+      bindings[i].count = 0;
+      bindings[i].in_use = 1;
+      release(&netlock);
+      return 0;
+    }
+  }
+
+  release(&netlock);
   return -1;
 }
 
@@ -188,10 +203,49 @@ ip_rx(char *buf, int len)
     printf("ip_rx: received an IP packet\n");
   seen_ip = 1;
 
-  //
-  // Your code here.
-  //
-  
+  // get the header information
+  struct eth *eth = (struct eth *) buf;
+  struct ip  *ip  = (struct ip *) (buf + sizeof(struct eth));
+  struct udp *udp = (struct udp *) ((char *)ip + sizeof(struct ip));
+
+  // only handle udp request
+  if(ip->ip_p == IPPROTO_UDP){
+    uint16 dport = ntohs(udp->dport);
+    uint16 sport = ntohs(udp->sport);
+    uint32 srcip = ntohl(ip->ip_src);
+
+    acquire(&netlock);
+    for(int i = 0; i < MAX_PORTS; i++){
+      // find the correct port
+      if(dport == bindings[i].port && bindings[i].is_use == 1){
+        // get the payload and len
+        char *payload = (char *)udp + sizeof(struct udp);
+        int payload_len = ntohs(udp->ulen) - sizeof(struct udp);
+
+        if(bindings[i].count < MAX_QUEUE){
+          // create new udp package
+          // add it to the bindings queue
+          struct udp_pkt *p = &bindings[i].queue[bindings[i].head];
+          p->src_ip = srcip;
+          p->src_port = sport;
+          p->len = payload_len;
+          memmove(p->payload, payload, payload_len);
+
+          // update the states
+          bindings[i].head = (bindings[i].head + 1) % MAX_QUEUE;
+          bindings[i].count++;
+
+          wakeup(&bindings[i]);
+        }
+        break;
+      }
+    }
+    release(&netlock);
+  }
+
+  // free the buf space
+  kfree(buf);
+  return;
 }
 
 //
