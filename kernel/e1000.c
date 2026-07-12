@@ -13,6 +13,8 @@ static struct tx_desc tx_ring[TX_RING_SIZE] __attribute__((aligned(16)));
 #define RX_RING_SIZE 16
 static struct rx_desc rx_ring[RX_RING_SIZE] __attribute__((aligned(16)));
 
+static char *tx_bufs[TX_RING_SIZE];
+
 // remember where the e1000's registers live.
 static volatile uint32 *regs;
 
@@ -104,8 +106,27 @@ e1000_transmit(char *buf, int len)
   // return -1 on failure (e.g., there is no descriptor available)
   // so that the caller knows to free buf.
   //
+  acquire(&e1000_lock);
+  uint32 tail = regs[E1000_TDT];
+  if(!(tx_ring[tail].status & E1000_TXD_STAT_DD)){
+    release(&e1000_lock);
+    return -1;
+  }
 
+  if(tx_bufs[tail] != 0){
+    kfree(tx_bufs[tail]);
+  }
+
+  tx_ring[tail].status = 0;
+  tx_ring[tail].addr   = (uint64) buf;
+  tx_ring[tail].length = len;
+  tx_ring[tail].cmd    = E1000_TXD_CMD_EOP | E1000_TXD_CMD_RS;
   
+  tx_bufs[tail] = buf;
+
+  regs[E1000_TDT] = (tail + 1) % TX_RING_SIZE;
+  
+  release(&e1000_lock);
   return 0;
 }
 
