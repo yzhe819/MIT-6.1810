@@ -139,7 +139,28 @@ e1000_recv(void)
   // Check for packets that have arrived from the e1000
   // Create and deliver a buf for each packet (using net_rx()).
   //
+  acquire(&e1000_lock);
+  uint32 tail = (regs[E1000_RDT] + 1) % RX_RING_SIZE;
+  int has_packet = rx_ring[tail].status & E1000_RXD_STAT_DD;
+  release(&e1000_lock);
 
+  while(has_packet){
+    // the net_rx will do the kfree, we donot need to do it manually
+    net_rx((char*)rx_ring[tail].addr, rx_ring[tail].length);
+
+    acquire(&e1000_lock);
+    rx_ring[tail].addr = (uint64) kalloc();
+    rx_ring[tail].length = 0;
+    rx_ring[tail].csum = 0;
+    // clear the DD status
+    rx_ring[tail].status = 0;
+    // also update the RDT
+    regs[E1000_RDT] = tail;
+    // move to handle the next on the ring
+    tail = (tail + 1) % RX_RING_SIZE;
+    has_packet = rx_ring[tail].status & E1000_RXD_STAT_DD;
+    release(&e1000_lock);
+  }
 }
 
 void
