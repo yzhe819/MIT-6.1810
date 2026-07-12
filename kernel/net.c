@@ -64,9 +64,17 @@ sys_bind(void)
 uint64
 sys_unbind(void)
 {
-  //
-  // Optional: Your code here.
-  //
+  int port;
+  argint(0, &port);
+
+  acquire(&netlock);
+  for (int i = 0; i < MAX_PORTS; i++) {
+    if (bindings[i].port == port && bindings[i].in_use == 1) {
+      bindings[i].in_use = 0;
+      break;
+    }
+  }
+  release(&netlock);
 
   return 0;
 }
@@ -89,9 +97,52 @@ sys_unbind(void)
 uint64
 sys_recv(void)
 {
-  //
-  // Your code here.
-  //
+  int dport;
+  uint64 srcaddr;   // user address for int *src
+  uint64 sportaddr; // user address for short *sport
+  uint64 bufaddr;   // user address for char *buf
+  int maxlen;
+
+  argint(0, &dport);
+  argaddr(1, &srcaddr);
+  argaddr(2, &sportaddr);
+  argaddr(3, &bufaddr);
+  argint(4, &maxlen);
+
+  acquire(&netlock);
+  for(int i=0; i<MAX_PORTS; i++){
+    if(bindings[i].port == dport && bindings[i].in_use == 1){
+      while(bindings[i].count == 0){
+        // waiting for the data comes in
+        sleep(&bindings[i], &netlock);
+      }
+
+      // already have some data
+      int head = bindings[i].head;
+      int count = bindings[i].count;
+      int index = (head - count + MAX_QUEUE) % MAX_QUEUE;
+
+      struct udp_pkt *p = &bindings[i].queue[index];
+      char* payload = p->payload;
+      int len = (int)p->ulen;
+      len = maxlen >= len ? len : maxlen;
+
+      bindings[i].count--;
+      release(&netlock);
+
+      // use copyout to copy the entire payload data
+      // copyout
+
+      struct proc *pr = myproc();
+
+      copyout(pr->pagetable, srcaddr, (char *)&p->sip, sizeof(p->sip));
+      copyout(pr->pagetable, sportaddr, (char *)&p->sport, sizeof(p->sport));
+      copyout(pr->pagetable, bufaddr, payload, len);
+      
+      return len;
+    }
+  }
+  release(&netlock);
   return -1;
 }
 
@@ -204,7 +255,6 @@ ip_rx(char *buf, int len)
   seen_ip = 1;
 
   // get the header information
-  struct eth *eth = (struct eth *) buf;
   struct ip  *ip  = (struct ip *) (buf + sizeof(struct eth));
   struct udp *udp = (struct udp *) ((char *)ip + sizeof(struct ip));
 
@@ -217,7 +267,7 @@ ip_rx(char *buf, int len)
     acquire(&netlock);
     for(int i = 0; i < MAX_PORTS; i++){
       // find the correct port
-      if(dport == bindings[i].port && bindings[i].is_use == 1){
+      if(dport == bindings[i].port && bindings[i].in_use == 1){
         // get the payload and len
         char *payload = (char *)udp + sizeof(struct udp);
         int payload_len = ntohs(udp->ulen) - sizeof(struct udp);
@@ -226,9 +276,9 @@ ip_rx(char *buf, int len)
           // create new udp package
           // add it to the bindings queue
           struct udp_pkt *p = &bindings[i].queue[bindings[i].head];
-          p->src_ip = srcip;
-          p->src_port = sport;
-          p->len = payload_len;
+          p->sip = srcip;
+          p->sport = sport;
+          p->ulen = payload_len;
           memmove(p->payload, payload, payload_len);
 
           // update the states
