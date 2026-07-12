@@ -16,7 +16,7 @@ $ make clean
 
 ---
 
-## Large Files
+## Large Files (hard)
 
 In unmodified xv6, file size is limited to **268 blocks** (`12` direct + `256` via one singly-indirect block).
 
@@ -96,7 +96,7 @@ $
 
 ---
 
-## Symbolic Links
+## Symbolic Links (moderate)
 
 Implement symbolic links (soft links) in xv6.
 

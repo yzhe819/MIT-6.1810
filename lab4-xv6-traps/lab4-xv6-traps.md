@@ -19,7 +19,7 @@ $ make clean
 
 ---
 
-## RISC-V Assembly
+## RISC-V Assembly (easy)
 
 It is important to understand some RISC-V assembly, which you were exposed to in 6.1910 (6.004). There is a file `user/call.c` in your xv6 repo. `make fs.img` compiles it and also produces a readable assembly version of the program in `user/call.asm`.
 
@@ -37,7 +37,7 @@ printf("x=%d y=%d", 3);
 
 ---
 
-## Backtrace
+## Backtrace (moderate)
 
 For debugging, it is often useful to have a backtrace: a list of function calls on the stack above the point where an error occurred. To help with backtraces, the compiler generates machine code that maintains a stack frame for each function in the current call chain. Each stack frame contains the return address and a "frame pointer" to the caller's stack frame. Register `s0` contains a pointer to the current stack frame (it actually points to the address of the saved return address on the stack plus 8). Your backtrace should use frame pointers to walk up the stack and print the saved return address in each stack frame.
 
@@ -91,7 +91,7 @@ Once your backtrace works, call it from `panic` in `kernel/printf.c` so you can 
 
 ---
 
-## Alarm
+## Alarm (hard)
 
 In this exercise, you will add a feature to xv6 that periodically alerts a process as it consumes CPU time. This can help compute-bound processes limit CPU usage, or perform periodic actions while computing. More generally, you will implement a primitive form of user-level interrupt/fault handlers; a similar mechanism could, for example, handle page faults in an application. Your solution is correct if it passes `alarmtest` and `usertests -q`.
 

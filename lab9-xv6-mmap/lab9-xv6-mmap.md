@@ -16,7 +16,7 @@ $ make clean
 
 ---
 
-## mmap API (subset for this lab)
+## mmap API (subset for this lab, hard)
 
 ```c
 void *mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offset);
@@ -46,7 +46,7 @@ It is acceptable that different processes mapping the same `MAP_SHARED` file do 
 
 ---
 
-## munmap API
+## munmap API (hard)
 
 ```c
 int munmap(void *addr, size_t len);
@@ -68,7 +68,7 @@ On process exit, `MAP_SHARED` modifications must also be written back (as if `mu
 
 ---
 
-## Implementation target
+## Implementation target (VMA + page-fault path, hard)
 
 Implement enough functionality for:
 

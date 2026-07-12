@@ -19,7 +19,7 @@ $ make clean
 
 ---
 
-## 内存分配器（Memory Allocator）
+## 内存分配器（hard）
 
 `user/kalloctest` 会对 xv6 分配器施压：3 个进程不断扩张/收缩地址空间，触发大量 `kalloc`/`kfree`。当前实现会在 `kmem.lock` 上出现明显竞争。
 
@@ -96,7 +96,7 @@ $ riscv64-linux-gnu-addr2line -e kernel/kernel
 
 ---
 
-## 读写锁（Read-Write Lock）
+## 读写锁（moderate/hard）
 
 这一部分与前半部分相互独立；即使前半没完成，也可单独完成并通过这一部分测试。
 

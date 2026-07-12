@@ -19,7 +19,7 @@ $ make clean
 
 ---
 
-## Memory Allocator
+## Memory Allocator (hard)
 
 `user/kalloctest` stresses xv6's allocator: three processes repeatedly grow and shrink address spaces, causing many `kalloc`/`kfree` calls. These currently contend on `kmem.lock`.
 
@@ -96,7 +96,7 @@ $ riscv64-linux-gnu-addr2line -e kernel/kernel
 
 ---
 
-## Read-Write Lock
+## Read-Write Lock (moderate/hard)
 
 This half is independent of the allocator half.
 

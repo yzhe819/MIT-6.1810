@@ -22,7 +22,7 @@ $ make clean
 
 ---
 
-## Inspect a User-Process Page Table
+## Inspect a User-Process Page Table (easy)
 
 To help you understand RISC-V page tables, your first task is to explain the page table for a user process.
 
@@ -41,7 +41,7 @@ For every page table entry in the `print_pgtbl` output, explain what it logicall
 
 ---
 
-## Speed Up System Calls
+## Speed Up System Calls (easy)
 
 Some operating systems (e.g., Linux) speed up certain system calls by sharing data in a read-only region between userspace and the kernel. This eliminates the need for kernel crossings when performing these system calls. To help you learn how to insert mappings into a page table, your task is to implement this optimization for the `getpid()` system call in xv6.
 
@@ -56,7 +56,7 @@ Which other xv6 system call(s) could be made faster using this shared page? Expl
 
 ---
 
-## Print a Page Table
+## Print a Page Table (easy)
 
 To help you visualize RISC-V page tables, and perhaps to aid future debugging, your next task is to write a function that prints the contents of a page table.
 
@@ -94,7 +94,7 @@ For every leaf page in the `vmprint` output, explain what it logically contains,
 
 ---
 
-## Use Superpages
+## Use Superpages (moderate/hard)
 
 The RISC-V paging hardware supports two-megabyte pages as well as ordinary 4096-byte pages. The general idea of larger pages is called superpages, and (since RISC-V supports more than one size) 2M pages are called megapages. The operating system creates a superpage by setting the `PTE_V` and `PTE_R` bits in the level-1 PTE, and setting the physical page number to point to the start of a two-megabyte region of physical memory. This physical address must be two-megabyte aligned (i.e., a multiple of two megabytes). You can read about this in the RISC-V privileged manual by searching for megapage and superpage (in particular, the top of page 112). Use of superpages decreases the amount of physical memory used by the page table, and can decrease misses in the TLB cache. For some programs this leads to large increases in performance.
 

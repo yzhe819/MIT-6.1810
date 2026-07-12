@@ -16,7 +16,7 @@ $ make clean
 
 ---
 
-## mmap 接口（本实验子集）
+## mmap 接口（本实验子集，hard）
 
 ```c
 void *mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offset);
@@ -46,7 +46,7 @@ void *mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offset);
 
 ---
 
-## munmap 接口
+## munmap 接口（hard）
 
 ```c
 int munmap(void *addr, size_t len);
@@ -68,7 +68,7 @@ int munmap(void *addr, size_t len);
 
 ---
 
-## 实现目标
+## 实现目标（VMA + 缺页处理路径，hard）
 
 实现到以下标准：
 

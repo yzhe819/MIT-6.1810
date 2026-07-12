@@ -44,7 +44,7 @@ tcpdump -XXnr packets.pcap
 
 ---
 
-## Part One：NIC
+## 第一部分：网卡（part one: nic）
 
 你需要补全 `kernel/e1000.c` 中的 `e1000_transmit()` 与 `e1000_recv()`，使驱动可以正常收发包。
 
@@ -93,7 +93,7 @@ E1000 每收到一个包，就 DMA 写入 RX ring 的下一个描述符指向的
 - `E1000_TDT`
 - `E1000_RDT`
 
-### Part One 测试方式
+### 第一部分测试方式
 
 `txone`：
 
@@ -141,7 +141,7 @@ E1000 每收到一个包，就 DMA 写入 RX ring 的下一个描述符指向的
 
 ---
 
-## Part Two：UDP Receive
+## 第二部分：UDP 接收（part two: udp receive）
 
 UDP（User Datagram Protocol）允许不同主机上的用户进程通过 IP 交换独立数据报。
 
@@ -292,7 +292,7 @@ Untracked files will not be handed in.  Continue? [y/N]
 
 ---
 
-## Optional Challenges（可选挑战）
+## 可选挑战
 
 - 本实验在入站处理用中断，但出站未采用。可实现更高级策略：软件队列缓存出站包，仅向 NIC 提供有限数量描述符，并依赖 TX 中断回填 TX ring，从而支持不同出站流量优先级。
 - 实现完整 [ARP cache](https://tools.ietf.org/html/rfc826)。
