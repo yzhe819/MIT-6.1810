@@ -18,7 +18,7 @@ Before coding, it helps to make the full flow clear:
 3. Only when a write actually happens (trap: store page fault), allocate a new page, copy content, and update the PTE.
 4. For memory reclamation, because multiple processes may share the same physical page, we cannot free directly. We need reference counts per page and free only when no process still needs that page.
 
-**Page reference counter**
+### Page reference counter
 
 Start with the simplest part: page reference counting.  
 This can be implemented first without breaking existing logic, and it gives a clean base for later COW changes.
@@ -162,7 +162,7 @@ freerange(void *pa_start, void *pa_end)
 That is everything needed for the page reference counter.  
 Next, we modify the parent→child memory-copy step in `uvmcopy`.
 
-**Changes to `uvmcopy`**
+### Changes to `uvmcopy`
 
 First, define one PTE bit to mark COW state in `kernel/riscv.h`:
 
@@ -217,7 +217,7 @@ Logic summary:
 - Map the same parent physical page `pa` into child page table.
 - Increment refcount for that physical page.
 
-**`usertrap` and `vmfault`**
+### `usertrap` and `vmfault`
 
 In `usertrap(void)`, this part is exactly where we handle page faults:
 
@@ -287,7 +287,7 @@ The logic is:
   2. copy old data to new page,
   3. try to free old page (`kfree`) to drop one reference, since child no longer needs that old physical page.
 
-**Change `copyout`**
+### Change `copyout`
 
 Finally, we still need one last change: `copyout`.
 
