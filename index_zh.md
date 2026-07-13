@@ -56,7 +56,7 @@
 
 **实验难度：** `implement copy-on-write fork`
 
-[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/cow.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab5-xv6-copy-on-write/lab5-xv6-copy-on-write-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/cow)
+[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/cow.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab5-xv6-copy-on-write/lab5-xv6-copy-on-write-zh.md) · [中文题解](https://github.com/yzhe819/MIT-6.1810/blob/main/lab5-xv6-copy-on-write/lab5-xv6-copy-on-write-solution-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/cow)
 
 
 ### Lab 6 — Network Driver｜网络驱动

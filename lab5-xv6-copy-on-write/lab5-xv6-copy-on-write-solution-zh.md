@@ -1,5 +1,7 @@
 # Lab 5 实验报告
 
+[English](./lab5-xv6-copy-on-write-solution.md) · [中文](./lab5-xv6-copy-on-write-solution-zh.md)
+
 **目标简述：** 在 xv6 中实现 COW fork：初始共享物理页、写入时按需复制，并正确维护物理页引用计数。
 
 **实验难度：** `implement copy-on-write fork`
@@ -332,7 +334,7 @@ COW 的整个设计初衷，就是"昂贵的操作（复制真实数据）能拖
 
 ## Lab 5 整体测试
 
-完成所有练习后，执行以下命令对 Lab 4 进行完整测试，验证各功能实现的正确性：
+完成所有练习后，执行以下命令对 Lab 5 进行完整测试，验证各功能实现的正确性：
 
 ```sh
 ./grade-lab-cow

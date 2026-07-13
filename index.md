@@ -56,7 +56,7 @@ Official difficulty reference:
 
 **Difficulty:** `implement copy-on-write fork`
 
-[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/cow.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab5-xv6-copy-on-write/lab5-xv6-copy-on-write.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/cow)
+[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/cow.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab5-xv6-copy-on-write/lab5-xv6-copy-on-write.md) · [Solution](https://github.com/yzhe819/MIT-6.1810/blob/main/lab5-xv6-copy-on-write/lab5-xv6-copy-on-write-solution.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/cow)
 
 
 ### Lab 6 — Network Driver
