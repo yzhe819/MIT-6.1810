@@ -305,10 +305,12 @@ uint64
 sys_open(void)
 {
   char path[MAXPATH];
+  char target[MAXPATH];
   int fd, omode;
-  struct file *f;
-  struct inode *ip;
+  struct file* f;
+  struct inode* ip;
   int n;
+  int depth = 0;
 
   argint(1, &omode);
   if((n = argstr(0, path, MAXPATH)) < 0)
@@ -316,36 +318,63 @@ sys_open(void)
 
   begin_op();
 
-  if(omode & O_CREATE){
+  if(omode & O_CREATE) {
     ip = create(path, T_FILE, 0, 0);
-    if(ip == 0){
+    if(ip == 0) {
       end_op();
       return -1;
     }
   } else {
-    if((ip = namei(path)) == 0){
+    if((ip = namei(path)) == 0) {
       end_op();
       return -1;
     }
     ilock(ip);
-    if(ip->type == T_DIR && omode != O_RDONLY){
+    if(ip->type == T_DIR && omode != O_RDONLY) {
       iunlockput(ip);
       end_op();
       return -1;
     }
+
+    // release the lock first
+    iunlock(ip);
+
     // symlink file handler
-    while(ip-> == T_SYMLINK && omode & O_NOFOLLOW){
-      break;
+    while(ip->type == T_SYMLINK && !(omode & O_NOFOLLOW)) {
+      depth++;
+      ilock(ip);
+
+      if(depth > 10) {
+        // achieve the system link depth limitation
+        iunlockput(ip);
+        end_op();
+        return -1;
+      }
+
+      if(readi(ip, 0, (uint64)target, 0, ip->size) != ip->size) {
+        iunlockput(ip);
+        end_op();
+        return -1;
+      }
+      iunlockput(ip);
+
+      if((ip = namei(target)) == 0) {
+        end_op();
+        return -1;
+      }
     }
+
+    // add the lock for ip at the end
+    ilock(ip);
   }
 
-  if(ip->type == T_DEVICE && (ip->major < 0 || ip->major >= NDEV)){
+  if(ip->type == T_DEVICE && (ip->major < 0 || ip->major >= NDEV)) {
     iunlockput(ip);
     end_op();
     return -1;
   }
 
-  if((f = filealloc()) == 0 || (fd = fdalloc(f)) < 0){
+  if((f = filealloc()) == 0 || (fd = fdalloc(f)) < 0) {
     if(f)
       fileclose(f);
     iunlockput(ip);
@@ -353,7 +382,7 @@ sys_open(void)
     return -1;
   }
 
-  if(ip->type == T_DEVICE){
+  if(ip->type == T_DEVICE) {
     f->type = FD_DEVICE;
     f->major = ip->major;
   } else {
@@ -364,7 +393,7 @@ sys_open(void)
   f->readable = !(omode & O_WRONLY);
   f->writable = (omode & O_WRONLY) || (omode & O_RDWR);
 
-  if((omode & O_TRUNC) && ip->type == T_FILE){
+  if((omode & O_TRUNC) && ip->type == T_FILE) {
     itrunc(ip);
   }
 
