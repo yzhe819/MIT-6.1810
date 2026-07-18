@@ -51,7 +51,7 @@ yzhe819/MIT-6.1810/
 ├── cow       Lab 5: Copy-on-Write Fork    ✓ 2026-07-12
 ├── net       Lab 6: Network Driver        ✓ 2026-07-12
 ├── lock      Lab 7: Locks                 ✓ 2026-07-18
-├── fs        Lab 8: File System
+├── fs        Lab 8: File System           ✓ 2026-07-18
 └── mmap      Lab 9: Mmap
 ```
 
