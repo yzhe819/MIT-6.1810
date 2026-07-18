@@ -333,6 +333,10 @@ sys_open(void)
       end_op();
       return -1;
     }
+    // symlink file handler
+    while(ip-> == T_SYMLINK && omode & O_NOFOLLOW){
+      break;
+    }
   }
 
   if(ip->type == T_DEVICE && (ip->major < 0 || ip->major >= NDEV)){
@@ -502,4 +506,10 @@ sys_pipe(void)
     return -1;
   }
   return 0;
+}
+
+uint64
+sys_symlink(void)
+{
+  return 0
 }
