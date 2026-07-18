@@ -408,8 +408,8 @@ bmap(struct inode *ip, uint bn)
   uint addr, *a;
   struct buf *bp;
 
-  if(bn < NDIRECT){
-    if((addr = ip->addrs[bn]) == 0){
+  if(bn < NDIRECT) {
+    if((addr = ip->addrs[bn]) == 0) {
       addr = balloc(ip->dev);
       if(addr == 0)
         return 0;
@@ -419,9 +419,9 @@ bmap(struct inode *ip, uint bn)
   }
   bn -= NDIRECT;
 
-  if(bn < NINDIRECT){
+  if(bn < NINDIRECT) {
     // Load indirect block, allocating if necessary.
-    if((addr = ip->addrs[NDIRECT]) == 0){
+    if((addr = ip->addrs[NDIRECT]) == 0) {
       addr = balloc(ip->dev);
       if(addr == 0)
         return 0;
@@ -429,14 +429,56 @@ bmap(struct inode *ip, uint bn)
     }
     bp = bread(ip->dev, addr);
     a = (uint*)bp->data;
-    if((addr = a[bn]) == 0){
+    if((addr = a[bn]) == 0) {
       addr = balloc(ip->dev);
-      if(addr){
+      if(addr) {
         a[bn] = addr;
         log_write(bp);
       }
     }
     brelse(bp);
+    return addr;
+  }
+  bn -= NINDIRECT;
+
+  if(bn < NINDIRECT * NINDIRECT) {
+    // calculate the block number for first level
+    int index = bn / NINDIRECT;
+    // use the reminder to get the item number
+    int rem = bn % NINDIRECT;
+
+    // get the last one, 11+1
+    if((addr = ip->addrs[NDIRECT + 1]) == 0) {
+      addr = balloc(ip->dev);
+      if(addr == 0)
+        return 0;
+      ip->addrs[NDIRECT + 1] = addr;
+    }
+
+    bp = bread(ip->dev, addr);
+    a = (uint*)bp->data;
+
+    if((addr = a[index]) == 0) {
+      addr = balloc(ip->dev);
+      if(addr) {
+        a[index] = addr;
+        log_write(bp);
+      }
+    }
+    brelse(bp);
+
+    bp = bread(ip->dev, addr);
+    a = (uint*)bp->data;
+
+    if((addr = a[rem]) == 0) {
+      addr = balloc(ip->dev);
+      if(addr) {
+        a[rem] = addr;
+        log_write(bp);
+      }
+    }
+    brelse(bp);
+
     return addr;
   }
 
@@ -450,25 +492,48 @@ itrunc(struct inode *ip)
 {
   int i, j;
   struct buf *bp;
+  struct buf *bp2;
   uint *a;
+  uint *a2;
 
-  for(i = 0; i < NDIRECT; i++){
-    if(ip->addrs[i]){
+  for(i = 0; i < NDIRECT; i++) {
+    if(ip->addrs[i]) {
       bfree(ip->dev, ip->addrs[i]);
       ip->addrs[i] = 0;
     }
   }
 
-  if(ip->addrs[NDIRECT]){
+  if(ip->addrs[NDIRECT]) {
     bp = bread(ip->dev, ip->addrs[NDIRECT]);
     a = (uint*)bp->data;
-    for(j = 0; j < NINDIRECT; j++){
+    for(j = 0; j < NINDIRECT; j++) {
       if(a[j])
         bfree(ip->dev, a[j]);
     }
     brelse(bp);
     bfree(ip->dev, ip->addrs[NDIRECT]);
     ip->addrs[NDIRECT] = 0;
+  }
+
+  if(ip->addrs[NDIRECT + 1]) {
+    bp = bread(ip->dev, ip->addrs[NDIRECT + 1]);
+    a = (uint*)bp->data;
+    for(j = 0; j < NINDIRECT; j++) {
+      if(a[j]) {
+        bp2 = bread(ip->dev, a[j]);
+        a2 = (uint*)bp2->data;
+        for(int k = 0; k < NINDIRECT; k++) {
+          // clear the all the leaf item
+          if(a2[k])
+            bfree(ip->dev, a2[k]);
+        }
+        brelse(bp2);
+        bfree(ip->dev, a[j]);
+      }
+    }
+    brelse(bp);
+    bfree(ip->dev, ip->addrs[NDIRECT + 1]);
+    ip->addrs[NDIRECT + 1] = 0;
   }
 
   ip->size = 0;
