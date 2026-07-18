@@ -336,13 +336,9 @@ sys_open(void)
       return -1;
     }
 
-    // release the lock first
-    iunlock(ip);
-
     // symlink file handler
     while(ip->type == T_SYMLINK && !(omode & O_NOFOLLOW)) {
       depth++;
-      ilock(ip);
 
       if(depth > 10) {
         // achieve the system link depth limitation
@@ -351,6 +347,9 @@ sys_open(void)
         return -1;
       }
 
+      if(ip->size > MAXPATH)
+        return -1;
+      
       if(readi(ip, 0, (uint64)target, 0, ip->size) != ip->size) {
         iunlockput(ip);
         end_op();
@@ -362,10 +361,10 @@ sys_open(void)
         end_op();
         return -1;
       }
-    }
 
-    // add the lock for ip at the end
-    ilock(ip);
+      // add the lock for ip at the end
+      ilock(ip);
+    }
   }
 
   if(ip->type == T_DEVICE && (ip->major < 0 || ip->major >= NDEV)) {

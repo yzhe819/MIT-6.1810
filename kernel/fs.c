@@ -460,10 +460,12 @@ bmap(struct inode *ip, uint bn)
 
     if((addr = a[index]) == 0) {
       addr = balloc(ip->dev);
-      if(addr) {
-        a[index] = addr;
-        log_write(bp);
+      if(addr == 0) {
+        brelse(bp);
+        return 0;
       }
+      a[index] = addr;
+      log_write(bp);
     }
     brelse(bp);
 
