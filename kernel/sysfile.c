@@ -522,6 +522,13 @@ sys_mmap(void)
   // get the current proc and setup the vam
   struct proc *p = myproc();
 
+  // check read/write prot is match with the premission
+  if((prot & PROT_READ) && !f->readable)
+    return -1;
+
+  if((prot & PROT_WRITE) && (flags & MAP_SHARED) && !f->writable)
+      return -1;
+
   for(int i=0;i<NVAM;i++){
     if(p->vams[i].valid == 0){
       p->vams[i].valid = 1;
@@ -535,7 +542,6 @@ sys_mmap(void)
       filedup(f);
       p->vams[i].file = f;
       p->sz = begin + len;
-      
       return p->vams[i].addr;
     }
   }
@@ -547,5 +553,64 @@ sys_mmap(void)
 uint64
 sys_munmap(void)
 {
-  return -1;
+  uint64 addr;
+  uint64 pa;
+  int len;
+  int i=0;
+
+  argaddr(0, &addr);
+  argint(1, &len);
+
+  struct proc *p = myproc();
+
+  for(i=0;i<NVAM;i++){
+    if(p->vams[i].valid == 1){
+      if(p->vams[i].addr <= addr && addr < (p->vams[i].addr + p->vams[i].len)){
+        break;
+      }
+    }
+  }
+
+  // not found the related vam, return
+  if(i == NVAM){
+    return -1;
+  }
+
+  struct vam *vam = &p->vams[i];
+
+  for(uint64 va=addr;va<addr+len;va += PGSIZE){
+    uint64 end = vam->addr + vam->len;
+    int size = PGSIZE;
+    if (va + PGSIZE > end)
+      size = end - va;
+
+    if((pa = walkaddr(p->pagetable, va))!= 0){
+      if(vam->flags & MAP_SHARED){
+        uint fileoff = (va - vam->addr) + vam->offset;
+        struct inode *ip = vam->file->ip;
+        begin_op();
+        ilock(ip);
+        writei(ip, 0, pa, fileoff, size);
+        iunlock(ip);
+        end_op();
+      }
+      uvmunmap(p->pagetable, va, 1, 1);
+    }else{
+      // not be mapped, skip this page
+      continue;
+    }
+  }
+
+  if(addr == vam->addr && len == vam->len){
+    fileclose(vam->file);
+    vam->valid = 0;
+  }else if(addr == vam->addr){
+    vam->addr += len;
+    vam->offset += len;
+    vam->len -= len;
+  }else if((addr + len)== (vam->addr + vam->len)){
+    vam->len -= len;
+  }
+
+  return 0;
 }

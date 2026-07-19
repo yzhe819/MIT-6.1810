@@ -471,16 +471,10 @@ vmfault(pagetable_t pagetable, uint64 va, int read)
     if(p->vams[i].valid == 1){
       // this the correct vam
       if(p->vams[i].addr <= va && va < (p->vams[i].addr + p->vams[i].len)){
+        uint64 end = p->vams[i].addr + p->vams[i].len;
         int size = PGSIZE;
-        int len = p->vams[i].len;
-        int round = len / PGSIZE + 1;
-        int rem = len % PGSIZE;
-
-        int location = (va - p->vams[i].addr) / PGSIZE + 1;
-
-        if(round == location){
-          size = rem;
-        }
+        if (va + PGSIZE > end)
+            size = end - va;
 
         // init mem
         mem = (uint64) kalloc();
