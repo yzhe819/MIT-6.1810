@@ -147,7 +147,7 @@ found:
   p->context.sp = p->kstack + PGSIZE;
 
   // init all the vam space
-  for(int i = 0; i < NVMA; i++) {
+  for(int i = 0; i < NVAM; i++) {
     memset(&p->vams[i], 0, sizeof(p->vams[i]));
   }
 
@@ -165,7 +165,7 @@ freeproc(struct proc *p)
   p->trapframe = 0;
   if(p->pagetable)
     proc_freepagetable(p->pagetable, p->sz);
-  for(int i = 0; i < NVMA; i++) {
+  for(int i = 0; i < NVAM; i++) {
     memset(&p->vams[i], 0, sizeof(p->vams[i]));
   }
   p->pagetable = 0;

@@ -503,3 +503,49 @@ sys_pipe(void)
   }
   return 0;
 }
+
+uint64
+sys_mmap(void)
+{
+  uint64 addr;
+  int len, prot, flags, offset;
+  struct file *f;
+
+  argaddr(0, &addr);
+  argint(1, &len);
+  argint(2, &prot);
+  argint(3, &flags);
+  if(argfd(4, 0, &f) < 0)
+    return -1;
+  argint(5, &offset);
+  
+  // get the current proc and setup the vam
+  struct proc *p = myproc();
+
+  for(int i=0;i<NVAM;i++){
+    if(p->vams[i].valid == 0){
+      p->vams[i].valid = 1;
+      // set the give memory space from begin va
+      uint64 begin = PGROUNDUP(p->sz);
+      p->vams[i].addr = begin;
+      p->vams[i].len = len;
+      p->vams[i].prot = prot;
+      p->vams[i].flags = flags;
+      p->vams[i].offset = offset;
+      filedup(f);
+      p->vams[i].file = f;
+      p->sz = begin + len;
+      
+      return p->vams[i].addr;
+    }
+  }
+
+  // cannot find the vam slot for this proc
+  return -1;
+}
+
+uint64
+sys_munmap(void)
+{
+  return -1;
+}

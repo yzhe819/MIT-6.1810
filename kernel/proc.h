@@ -1,3 +1,5 @@
+#include "defs.h"
+
 // Saved registers for kernel context switches.
 struct context {
   uint64 ra;
@@ -90,7 +92,7 @@ struct vam {
   int flags; // use to record map_shared or map_private
   struct file *file;
   off_t offset; // usually is 0, just the placeholder here
-}
+};
 
 // Per-process state
 struct proc {
