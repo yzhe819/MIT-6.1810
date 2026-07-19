@@ -533,7 +533,9 @@ sys_mmap(void)
     if(p->vmas[i].valid == 0){
       p->vmas[i].valid = 1;
       // set the give memory space from begin va
-      uint64 begin = PGROUNDUP(p->sz);
+      uint64 end = PGROUNDUP(len);
+      p->mmapend -= end;
+      uint64 begin = p->mmapend;
       p->vmas[i].addr = begin;
       p->vmas[i].len = len;
       p->vmas[i].prot = prot;
@@ -541,7 +543,6 @@ sys_mmap(void)
       p->vmas[i].offset = offset;
       filedup(f);
       p->vmas[i].file = f;
-      p->sz = begin + len;
       return p->vmas[i].addr;
     }
   }

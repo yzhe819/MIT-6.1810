@@ -459,8 +459,6 @@ vmfault(pagetable_t pagetable, uint64 va, int read)
   uint64 mem;
   struct proc *p = myproc();
 
-  if (va >= p->sz)
-    return 0;
   va = PGROUNDDOWN(va);
   if(ismapped(pagetable, va)) {
     return 0;
@@ -504,6 +502,9 @@ vmfault(pagetable_t pagetable, uint64 va, int read)
     }
   }
 
+  // not belongs to any vma -> check the stack allocation
+  if (va >= p->sz)
+    return 0;
 
   mem = (uint64) kalloc();
   if(mem == 0)

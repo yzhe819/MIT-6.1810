@@ -120,4 +120,6 @@ struct proc {
   
   // add vma support array
   struct vma vmas[NVMA];
+  // the top address
+  uint64 mmapend;
 };
