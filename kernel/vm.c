@@ -7,6 +7,10 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "fs.h"
+#include "defs.h"
+#include "fcntl.h"
+#include "sleeplock.h"
+#include "file.h"
 
 /*
  * the kernel's page table.
@@ -461,6 +465,52 @@ vmfault(pagetable_t pagetable, uint64 va, int read)
   if(ismapped(pagetable, va)) {
     return 0;
   }
+
+  for(int i = 0; i<NVAM;i++){
+    // check the using vam
+    if(p->vams[i].valid == 1){
+      // this the correct vam
+      if(p->vams[i].addr <= va && va < (p->vams[i].addr + p->vams[i].len)){
+        int size = PGSIZE;
+        int len = p->vams[i].len;
+        int round = len / PGSIZE + 1;
+        int rem = len % PGSIZE;
+
+        int location = (va - p->vams[i].addr) / PGSIZE + 1;
+
+        if(round == location){
+          size = rem;
+        }
+
+        // init mem
+        mem = (uint64) kalloc();
+        if(mem == 0)
+          return 0;
+        memset((void *) mem, 0, PGSIZE);
+
+        // read the file data into the mem
+        struct inode *ip = p->vams[i].file->ip;
+        ilock(ip);
+        readi(ip, 0, mem, va - p->vams[i].addr + p->vams[i].offset, size);
+        iunlock(ip);
+
+        // update the prot for this page
+        int prot = p->vams[i].prot;
+        int perm = PTE_U;
+        if(prot & PROT_READ) perm |= PTE_R;
+        if(prot & PROT_WRITE) perm |= PTE_W;
+
+        if (mappages(p->pagetable, va, size, mem, perm) != 0) {
+          kfree((void *)mem);
+          return 0;
+        }
+
+        return mem;
+      }
+    }
+  }
+
+
   mem = (uint64) kalloc();
   if(mem == 0)
     return 0;
