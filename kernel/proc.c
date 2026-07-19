@@ -293,6 +293,14 @@ kfork(void)
       np->ofile[i] = filedup(p->ofile[i]);
   np->cwd = idup(p->cwd);
 
+  // copy the existing vmas list and invoke the fileup
+  for(i = 0; i < NVMA; i++){
+    if(p->vmas[i].valid == 1){
+      np->vmas[i] = p->vmas[i];
+      filedup(np->vmas[i].file);
+    }
+  }
+
   safestrcpy(np->name, p->name, sizeof(p->name));
 
   pid = np->pid;
@@ -342,6 +350,16 @@ kexit(int status)
       struct file *f = p->ofile[fd];
       fileclose(f);
       p->ofile[fd] = 0;
+    }
+  }
+
+  for(int i=0;i<NVMA; i++){
+    if(p->vmas[i].valid == 1){
+      struct file *f = p->vmas[i].file;
+      vmaunmap(p, &p->vmas[i], p->vmas[i].addr, p->vmas[i].len);
+      fileclose(f);
+      p->vmas[i].file = 0;
+      p->vmas[i].valid = 0;
     }
   }
 

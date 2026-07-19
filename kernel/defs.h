@@ -242,3 +242,8 @@ void            netinit(void);
 void            net_rx(char *buf, int len);
 
 #endif
+
+// add vma handle function
+struct proc;
+struct vma;
+void vmaunmap(struct proc *p, struct vma *vma, uint64 addr, uint64 len);

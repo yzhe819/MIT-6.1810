@@ -554,7 +554,7 @@ uint64
 sys_munmap(void)
 {
   uint64 addr;
-  uint64 pa;
+  
   int len;
   int i=0;
 
@@ -578,6 +578,26 @@ sys_munmap(void)
 
   struct vma *vma = &p->vmas[i];
 
+  vmaunmap(p, vma, addr, len);
+
+  if(addr == vma->addr && len == vma->len){
+    fileclose(vma->file);
+    vma->valid = 0;
+  }else if(addr == vma->addr){
+    vma->addr += len;
+    vma->offset += len;
+    vma->len -= len;
+  }else if((addr + len)== (vma->addr + vma->len)){
+    vma->len -= len;
+  }
+
+  return 0;
+}
+
+void
+vmaunmap(struct proc *p, struct vma *vma, uint64 addr, uint64 len)
+{
+  uint64 pa;
   for(uint64 va=addr;va<addr+len;va += PGSIZE){
     if((pa = walkaddr(p->pagetable, va))!= 0){
       if(vma->flags & MAP_SHARED){
@@ -605,17 +625,4 @@ sys_munmap(void)
       continue;
     }
   }
-
-  if(addr == vma->addr && len == vma->len){
-    fileclose(vma->file);
-    vma->valid = 0;
-  }else if(addr == vma->addr){
-    vma->addr += len;
-    vma->offset += len;
-    vma->len -= len;
-  }else if((addr + len)== (vma->addr + vma->len)){
-    vma->len -= len;
-  }
-
-  return 0;
 }
