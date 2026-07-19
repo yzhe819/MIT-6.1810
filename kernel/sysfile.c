@@ -579,18 +579,23 @@ sys_munmap(void)
   struct vma *vma = &p->vmas[i];
 
   for(uint64 va=addr;va<addr+len;va += PGSIZE){
-    uint64 end = vma->addr + vma->len;
-    int size = PGSIZE;
-    if (va + PGSIZE > end)
-      size = end - va;
-
     if((pa = walkaddr(p->pagetable, va))!= 0){
       if(vma->flags & MAP_SHARED){
         uint fileoff = (va - vma->addr) + vma->offset;
         struct inode *ip = vma->file->ip;
         begin_op();
         ilock(ip);
-        writei(ip, 0, pa, fileoff, size);
+        uint size;
+        if(fileoff >= ip->size){
+            size = 0;
+        } else if(fileoff + PGSIZE > ip->size){
+            size = ip->size - fileoff;
+        } else {
+            size = PGSIZE;
+        }
+        if(size > 0){
+            writei(ip, 0, pa, fileoff, size);
+        }
         iunlock(ip);
         end_op();
       }
