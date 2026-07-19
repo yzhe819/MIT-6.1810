@@ -81,6 +81,17 @@ struct trapframe {
 
 enum procstate { UNUSED, USED, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 
+// vam state
+struct vam {
+  int valid; // this vam is be using or not
+  uint64 addr; // the va start of this mapping
+  size_t len;
+  int prot; // the prot_read / prot_write premission record
+  int flags; // use to record map_shared or map_private
+  struct file *file;
+  off_t offset; // usually is 0, just the placeholder here
+}
+
 // Per-process state
 struct proc {
   struct spinlock lock;
@@ -104,4 +115,7 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+  
+  // add vam support array
+  struct vam vams[NVAM];
 };
