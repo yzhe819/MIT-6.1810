@@ -267,16 +267,16 @@ int
 kfork(void)
 {
   int i, pid;
-  struct proc *np;
-  struct proc *p = myproc();
+  struct proc* np;
+  struct proc* p = myproc();
 
   // Allocate process.
-  if((np = allocproc()) == 0){
+  if((np = allocproc()) == 0) {
     return -1;
   }
 
   // Copy user memory from parent to child.
-  if(uvmcopy(p->pagetable, np->pagetable, p->sz) < 0){
+  if(uvmcopy(p->pagetable, np->pagetable, p->sz) < 0) {
     freeproc(np);
     release(&np->lock);
     return -1;
@@ -298,8 +298,8 @@ kfork(void)
   np->mmapend = p->mmapend;
 
   // copy the existing vmas list and invoke the fileup
-  for(i = 0; i < NVMA; i++){
-    if(p->vmas[i].valid == 1){
+  for(i = 0; i < NVMA; i++) {
+    if(p->vmas[i].valid == 1) {
       np->vmas[i] = p->vmas[i];
       filedup(np->vmas[i].file);
     }
@@ -343,23 +343,23 @@ reparent(struct proc *p)
 void
 kexit(int status)
 {
-  struct proc *p = myproc();
+  struct proc* p = myproc();
 
   if(p == initproc)
     panic("init exiting");
 
   // Close all open files.
-  for(int fd = 0; fd < NOFILE; fd++){
-    if(p->ofile[fd]){
-      struct file *f = p->ofile[fd];
+  for(int fd = 0; fd < NOFILE; fd++) {
+    if(p->ofile[fd]) {
+      struct file* f = p->ofile[fd];
       fileclose(f);
       p->ofile[fd] = 0;
     }
   }
 
-  for(int i=0;i<NVMA; i++){
-    if(p->vmas[i].valid == 1){
-      struct file *f = p->vmas[i].file;
+  for(int i = 0; i < NVMA; i++) {
+    if(p->vmas[i].valid == 1) {
+      struct file* f = p->vmas[i].file;
       vmaunmap(p, &p->vmas[i], p->vmas[i].addr, p->vmas[i].len);
       fileclose(f);
       p->vmas[i].file = 0;
@@ -379,7 +379,7 @@ kexit(int status)
 
   // Parent might be sleeping in wait().
   wakeup(p->parent);
-  
+
   acquire(&p->lock);
 
   p->xstate = status;

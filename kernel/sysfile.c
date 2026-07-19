@@ -509,7 +509,7 @@ sys_mmap(void)
 {
   uint64 addr;
   int len, prot, flags, offset;
-  struct file *f;
+  struct file* f;
 
   argaddr(0, &addr);
   argint(1, &len);
@@ -518,19 +518,19 @@ sys_mmap(void)
   if(argfd(4, 0, &f) < 0)
     return -1;
   argint(5, &offset);
-  
+
   // get the current proc and setup the vma
-  struct proc *p = myproc();
+  struct proc* p = myproc();
 
   // check read/write prot is match with the premission
   if((prot & PROT_READ) && !f->readable)
     return -1;
 
   if((prot & PROT_WRITE) && (flags & MAP_SHARED) && !f->writable)
-      return -1;
+    return -1;
 
-  for(int i=0;i<NVMA;i++){
-    if(p->vmas[i].valid == 0){
+  for(int i = 0; i < NVMA; i++) {
+    if(p->vmas[i].valid == 0) {
       p->vmas[i].valid = 1;
       // set the give memory space from begin va
       uint64 end = PGROUNDUP(len);
@@ -555,40 +555,40 @@ uint64
 sys_munmap(void)
 {
   uint64 addr;
-  
+
   int len;
-  int i=0;
+  int i = 0;
 
   argaddr(0, &addr);
   argint(1, &len);
 
-  struct proc *p = myproc();
+  struct proc* p = myproc();
 
-  for(i=0;i<NVMA;i++){
-    if(p->vmas[i].valid == 1){
-      if(p->vmas[i].addr <= addr && addr < (p->vmas[i].addr + p->vmas[i].len)){
+  for(i = 0; i < NVMA; i++) {
+    if(p->vmas[i].valid == 1) {
+      if(p->vmas[i].addr <= addr && addr < (p->vmas[i].addr + p->vmas[i].len)) {
         break;
       }
     }
   }
 
   // not found the related vma, return
-  if(i == NVMA){
+  if(i == NVMA) {
     return -1;
   }
 
-  struct vma *vma = &p->vmas[i];
+  struct vma* vma = &p->vmas[i];
 
   vmaunmap(p, vma, addr, len);
 
-  if(addr == vma->addr && len == vma->len){
+  if(addr == vma->addr && len == vma->len) {
     fileclose(vma->file);
     vma->valid = 0;
-  }else if(addr == vma->addr){
+  } else if(addr == vma->addr) {
     vma->addr += len;
     vma->offset += len;
     vma->len -= len;
-  }else if((addr + len)== (vma->addr + vma->len)){
+  } else if((addr + len) == (vma->addr + vma->len)) {
     vma->len -= len;
   }
 
@@ -596,32 +596,32 @@ sys_munmap(void)
 }
 
 void
-vmaunmap(struct proc *p, struct vma *vma, uint64 addr, uint64 len)
+vmaunmap(struct proc* p, struct vma* vma, uint64 addr, uint64 len)
 {
   uint64 pa;
-  for(uint64 va=addr;va<addr+len;va += PGSIZE){
-    if((pa = walkaddr(p->pagetable, va))!= 0){
-      if(vma->flags & MAP_SHARED){
+  for(uint64 va = addr; va < addr + len; va += PGSIZE) {
+    if((pa = walkaddr(p->pagetable, va)) != 0) {
+      if(vma->flags & MAP_SHARED) {
         uint fileoff = (va - vma->addr) + vma->offset;
-        struct inode *ip = vma->file->ip;
+        struct inode* ip = vma->file->ip;
         begin_op();
         ilock(ip);
         uint size;
-        if(fileoff >= ip->size){
-            size = 0;
-        } else if(fileoff + PGSIZE > ip->size){
-            size = ip->size - fileoff;
+        if(fileoff >= ip->size) {
+          size = 0;
+        } else if(fileoff + PGSIZE > ip->size) {
+          size = ip->size - fileoff;
         } else {
-            size = PGSIZE;
+          size = PGSIZE;
         }
-        if(size > 0){
-            writei(ip, 0, pa, fileoff, size);
+        if(size > 0) {
+          writei(ip, 0, pa, fileoff, size);
         }
         iunlock(ip);
         end_op();
       }
       uvmunmap(p->pagetable, va, 1, 1);
-    }else{
+    } else {
       // not be mapped, skip this page
       continue;
     }

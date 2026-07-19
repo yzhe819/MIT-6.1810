@@ -457,31 +457,31 @@ uint64
 vmfault(pagetable_t pagetable, uint64 va, int read)
 {
   uint64 mem;
-  struct proc *p = myproc();
+  struct proc* p = myproc();
 
   va = PGROUNDDOWN(va);
   if(ismapped(pagetable, va)) {
     return 0;
   }
 
-  for(int i = 0; i<NVMA;i++){
+  for(int i = 0; i < NVMA; i++) {
     // check the using vma
-    if(p->vmas[i].valid == 1){
+    if(p->vmas[i].valid == 1) {
       // this the correct vma
-      if(p->vmas[i].addr <= va && va < (p->vmas[i].addr + p->vmas[i].len)){
+      if(p->vmas[i].addr <= va && va < (p->vmas[i].addr + p->vmas[i].len)) {
         uint64 end = p->vmas[i].addr + p->vmas[i].len;
         int size = PGSIZE;
-        if (va + PGSIZE > end)
-            size = end - va;
+        if(va + PGSIZE > end)
+          size = end - va;
 
         // init mem
-        mem = (uint64) kalloc();
+        mem = (uint64)kalloc();
         if(mem == 0)
           return 0;
-        memset((void *) mem, 0, PGSIZE);
+        memset((void*)mem, 0, PGSIZE);
 
         // read the file data into the mem
-        struct inode *ip = p->vmas[i].file->ip;
+        struct inode* ip = p->vmas[i].file->ip;
         ilock(ip);
         readi(ip, 0, mem, va - p->vmas[i].addr + p->vmas[i].offset, size);
         iunlock(ip);
@@ -489,11 +489,13 @@ vmfault(pagetable_t pagetable, uint64 va, int read)
         // update the prot for this page
         int prot = p->vmas[i].prot;
         int perm = PTE_U;
-        if(prot & PROT_READ) perm |= PTE_R;
-        if(prot & PROT_WRITE) perm |= PTE_W;
+        if(prot & PROT_READ)
+          perm |= PTE_R;
+        if(prot & PROT_WRITE)
+          perm |= PTE_W;
 
-        if (mappages(p->pagetable, va, size, mem, perm) != 0) {
-          kfree((void *)mem);
+        if(mappages(p->pagetable, va, size, mem, perm) != 0) {
+          kfree((void*)mem);
           return 0;
         }
 
@@ -503,15 +505,15 @@ vmfault(pagetable_t pagetable, uint64 va, int read)
   }
 
   // not belongs to any vma -> check the stack allocation
-  if (va >= p->sz)
+  if(va >= p->sz)
     return 0;
 
-  mem = (uint64) kalloc();
+  mem = (uint64)kalloc();
   if(mem == 0)
     return 0;
-  memset((void *) mem, 0, PGSIZE);
-  if (mappages(p->pagetable, va, PGSIZE, mem, PTE_W|PTE_U|PTE_R) != 0) {
-    kfree((void *)mem);
+  memset((void*)mem, 0, PGSIZE);
+  if(mappages(p->pagetable, va, PGSIZE, mem, PTE_W | PTE_U | PTE_R) != 0) {
+    kfree((void*)mem);
     return 0;
   }
   return mem;
