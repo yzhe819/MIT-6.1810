@@ -466,12 +466,12 @@ vmfault(pagetable_t pagetable, uint64 va, int read)
     return 0;
   }
 
-  for(int i = 0; i<NVAM;i++){
-    // check the using vam
-    if(p->vams[i].valid == 1){
-      // this the correct vam
-      if(p->vams[i].addr <= va && va < (p->vams[i].addr + p->vams[i].len)){
-        uint64 end = p->vams[i].addr + p->vams[i].len;
+  for(int i = 0; i<NVMA;i++){
+    // check the using vma
+    if(p->vmas[i].valid == 1){
+      // this the correct vma
+      if(p->vmas[i].addr <= va && va < (p->vmas[i].addr + p->vmas[i].len)){
+        uint64 end = p->vmas[i].addr + p->vmas[i].len;
         int size = PGSIZE;
         if (va + PGSIZE > end)
             size = end - va;
@@ -483,13 +483,13 @@ vmfault(pagetable_t pagetable, uint64 va, int read)
         memset((void *) mem, 0, PGSIZE);
 
         // read the file data into the mem
-        struct inode *ip = p->vams[i].file->ip;
+        struct inode *ip = p->vmas[i].file->ip;
         ilock(ip);
-        readi(ip, 0, mem, va - p->vams[i].addr + p->vams[i].offset, size);
+        readi(ip, 0, mem, va - p->vmas[i].addr + p->vmas[i].offset, size);
         iunlock(ip);
 
         // update the prot for this page
-        int prot = p->vams[i].prot;
+        int prot = p->vmas[i].prot;
         int perm = PTE_U;
         if(prot & PROT_READ) perm |= PTE_R;
         if(prot & PROT_WRITE) perm |= PTE_W;

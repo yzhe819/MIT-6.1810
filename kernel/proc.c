@@ -146,9 +146,9 @@ found:
   p->context.ra = (uint64)forkret;
   p->context.sp = p->kstack + PGSIZE;
 
-  // init all the vam space
-  for(int i = 0; i < NVAM; i++) {
-    memset(&p->vams[i], 0, sizeof(p->vams[i]));
+  // init all the vma space
+  for(int i = 0; i < NVMA; i++) {
+    memset(&p->vmas[i], 0, sizeof(p->vmas[i]));
   }
 
   return p;
@@ -165,8 +165,8 @@ freeproc(struct proc *p)
   p->trapframe = 0;
   if(p->pagetable)
     proc_freepagetable(p->pagetable, p->sz);
-  for(int i = 0; i < NVAM; i++) {
-    memset(&p->vams[i], 0, sizeof(p->vams[i]));
+  for(int i = 0; i < NVMA; i++) {
+    memset(&p->vmas[i], 0, sizeof(p->vmas[i]));
   }
   p->pagetable = 0;
   p->sz = 0;

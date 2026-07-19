@@ -83,9 +83,9 @@ struct trapframe {
 
 enum procstate { UNUSED, USED, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 
-// vam state
-struct vam {
-  int valid; // this vam is be using or not
+// vma state
+struct vma {
+  int valid; // this vma is be using or not
   uint64 addr; // the va start of this mapping
   size_t len;
   int prot; // the prot_read / prot_write premission record
@@ -118,6 +118,6 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
   
-  // add vam support array
-  struct vam vams[NVAM];
+  // add vma support array
+  struct vma vmas[NVMA];
 };
