@@ -460,6 +460,10 @@ vmfault(pagetable_t pagetable, uint64 va, int read)
   struct proc* p = myproc();
 
   va = PGROUNDDOWN(va);
+
+  if(va >= TRAPFRAME)
+    return 0;
+  
   if(ismapped(pagetable, va)) {
     return 0;
   }
