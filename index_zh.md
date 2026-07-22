@@ -65,7 +65,7 @@
 
 **实验难度：** `part one: nic` · `part two: udp receive`
 
-[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/net.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab6-xv6-network-driver/lab6-xv6-network-driver-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/net)
+[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/net.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab6-xv6-network-driver/lab6-xv6-network-driver-zh.md) · [中文题解](https://github.com/yzhe819/MIT-6.1810/blob/main/lab6-xv6-network-driver/lab6-xv6-network-driver-solution-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/net)
 
 ### Lab 7 — Locks｜锁
 
