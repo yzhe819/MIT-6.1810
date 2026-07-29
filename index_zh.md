@@ -81,7 +81,7 @@
 
 **实验难度：** `large files` (hard) · `symbolic links` (moderate)
 
-[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/fs.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab8-xv6-file-system/lab8-xv6-file-system-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/fs)
+[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/fs.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab8-xv6-file-system/lab8-xv6-file-system-zh.md) · [中文题解](https://github.com/yzhe819/MIT-6.1810/blob/main/lab8-xv6-file-system/lab8-xv6-file-system-solution-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/fs)
 
 ### Lab 9 — mmap｜内存映射
 
