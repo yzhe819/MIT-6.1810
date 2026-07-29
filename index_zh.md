@@ -73,7 +73,7 @@
 
 **实验难度：** `memory allocator` (hard) · `read-write lock` (moderate/hard)
 
-[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/lock.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab7-xv6-locks/lab7-xv6-locks-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/lock)
+[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/lock.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab7-xv6-locks/lab7-xv6-locks-zh.md) · [中文题解](https://github.com/yzhe819/MIT-6.1810/blob/main/lab7-xv6-locks/lab7-xv6-locks-solution-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/lock)
 
 ### Lab 8 — File System｜文件系统
 
