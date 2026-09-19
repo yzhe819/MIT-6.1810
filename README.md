@@ -28,10 +28,22 @@ So I thought — why not write one myself? A few things that make this repo diff
 
 If you are new to this course, this is the best place to start. Everything related to the labs can be found here.
 
+### 实验中文题解 / Chinese Solutions
+
+- [Lab 1 — Unix Utilities｜Unix 实用工具](./lab1-xv6-unix-utilities/lab1-xv6-unix-utilities-solution-zh.md)
+- [Lab 2 — System Calls｜系统调用](./lab2-xv6-system-calls/lab2-xv6-system-calls-solution-zh.md)
+- [Lab 3 — Page Tables｜页表](./lab3-xv6-page-tables/lab3-xv6-page-tables-solution-zh.md)
+- [Lab 4 — Traps｜陷阱](./lab4-xv6-traps/lab4-xv6-traps-solution-zh.md)
+- [Lab 5 — Copy-on-Write Fork｜写时复制](./lab5-xv6-copy-on-write/lab5-xv6-copy-on-write-solution-zh.md)
+- [Lab 6 — Network Driver｜网络驱动](./lab6-xv6-network-driver/lab6-xv6-network-driver-solution-zh.md)
+- [Lab 7 — Locks｜锁](./lab7-xv6-locks/lab7-xv6-locks-solution-zh.md)
+- [Lab 8 — File System｜文件系统](./lab8-xv6-file-system/lab8-xv6-file-system-solution-zh.md)
+- [Lab 9 — mmap｜内存映射](./lab9-xv6-mmap/lab9-xv6-mmap-solution-zh.md)
+
 A complete index of all labs, including official documentation and code repositories:
 
-### -> [Lab Directory](./index.md)
-### -> [中文笔记入口](./index_zh.md)
+- [中文笔记完整索引](./index_zh.md)
+- [Lab Directory (English)](./index.md)
 
 ---
 

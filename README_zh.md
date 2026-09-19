@@ -28,10 +28,22 @@ MIT 6.1810 是麻省理工学院计算机科学系的操作系统课程，其前
 
 如果你是初次接触本课程，建议从这里开始。一切关于 Lab 的内容均可在此找到。
 
-各实验详细索引，包含官方文档、中文汉化及代码仓库链接：
+### 实验中文题解
 
-### -> [中文笔记入口](./index_zh.md)
-### -> [Lab Directory](./index.md)
+- [Lab 1 — Unix Utilities｜Unix 实用工具](./lab1-xv6-unix-utilities/lab1-xv6-unix-utilities-solution-zh.md)
+- [Lab 2 — System Calls｜系统调用](./lab2-xv6-system-calls/lab2-xv6-system-calls-solution-zh.md)
+- [Lab 3 — Page Tables｜页表](./lab3-xv6-page-tables/lab3-xv6-page-tables-solution-zh.md)
+- [Lab 4 — Traps｜陷阱](./lab4-xv6-traps/lab4-xv6-traps-solution-zh.md)
+- [Lab 5 — Copy-on-Write Fork｜写时复制](./lab5-xv6-copy-on-write/lab5-xv6-copy-on-write-solution-zh.md)
+- [Lab 6 — Network Driver｜网络驱动](./lab6-xv6-network-driver/lab6-xv6-network-driver-solution-zh.md)
+- [Lab 7 — Locks｜锁](./lab7-xv6-locks/lab7-xv6-locks-solution-zh.md)
+- [Lab 8 — File System｜文件系统](./lab8-xv6-file-system/lab8-xv6-file-system-solution-zh.md)
+- [Lab 9 — mmap｜内存映射](./lab9-xv6-mmap/lab9-xv6-mmap-solution-zh.md)
+
+各实验详细索引（包含官方文档、环境搭建、中文汉化题目及代码仓库）：
+
+- [中文笔记完整索引](./index_zh.md)
+- [Lab Directory (English)](./index.md)
 
 ---
 
