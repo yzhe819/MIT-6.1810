@@ -89,4 +89,4 @@
 
 **实验难度：** `mmap/munmap` (hard) · `VMA + 缺页处理路径` (hard)
 
-[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/mmap.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab9-xv6-mmap/lab9-xv6-mmap-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/mmap)
+[官方文档](https://pdos.csail.mit.edu/6.1810/2025/labs/mmap.html) · [中文汉化](https://github.com/yzhe819/MIT-6.1810/blob/main/lab9-xv6-mmap/lab9-xv6-mmap-zh.md) · [中文题解](https://github.com/yzhe819/MIT-6.1810/blob/main/lab9-xv6-mmap/lab9-xv6-mmap-solution-zh.md) · [代码仓库](https://github.com/yzhe819/MIT-6.1810/tree/mmap)
