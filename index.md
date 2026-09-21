@@ -65,7 +65,7 @@ Official difficulty reference:
 
 **Difficulty:** `part one: nic` · `part two: udp receive`
 
-[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/net.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab6-xv6-network-driver/lab6-xv6-network-driver.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/net)
+[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/net.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab6-xv6-network-driver/lab6-xv6-network-driver.md) · [Solution (AI Version)](https://github.com/yzhe819/MIT-6.1810/blob/main/lab6-xv6-network-driver/lab6-xv6-network-driver-solution.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/net)
 
 ### Lab 7 — Locks
 
@@ -73,7 +73,7 @@ Official difficulty reference:
 
 **Difficulty:** `memory allocator` (hard) · `read-write lock` (moderate/hard)
 
-[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/lock.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab7-xv6-locks/lab7-xv6-locks.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/lock)
+[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/lock.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab7-xv6-locks/lab7-xv6-locks.md) · [Solution (AI Version)](https://github.com/yzhe819/MIT-6.1810/blob/main/lab7-xv6-locks/lab7-xv6-locks-solution.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/lock)
 
 ### Lab 8 — File System
 
@@ -81,7 +81,7 @@ Official difficulty reference:
 
 **Difficulty:** `large files` (hard) · `symbolic links` (moderate)
 
-[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/fs.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab8-xv6-file-system/lab8-xv6-file-system.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/fs)
+[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/fs.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab8-xv6-file-system/lab8-xv6-file-system.md) · [Solution (AI Version)](https://github.com/yzhe819/MIT-6.1810/blob/main/lab8-xv6-file-system/lab8-xv6-file-system-solution.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/fs)
 
 ### Lab 9 — mmap
 
@@ -89,4 +89,4 @@ Official difficulty reference:
 
 **Difficulty:** `mmap/munmap` (hard) · `VMA + page-fault path` (hard)
 
-[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/mmap.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab9-xv6-mmap/lab9-xv6-mmap.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/mmap)
+[Official Docs](https://pdos.csail.mit.edu/6.1810/2025/labs/mmap.html) · [Lab Questions](https://github.com/yzhe819/MIT-6.1810/blob/main/lab9-xv6-mmap/lab9-xv6-mmap.md) · [Solution (AI Version)](https://github.com/yzhe819/MIT-6.1810/blob/main/lab9-xv6-mmap/lab9-xv6-mmap-solution.md) · [Code](https://github.com/yzhe819/MIT-6.1810/tree/mmap)
